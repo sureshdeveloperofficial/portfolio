@@ -208,8 +208,16 @@ const MyProjects = ({ projects: incomingProjects }) => {
       aria-label="My Projects"
     >
       <div className="max-w-7xl mx-auto px-5 md:px-8">
-        <div className="flex items-end justify-between gap-4 mb-6 md:mb-8">
-          <h2 className="projects-title general-title md:leading-none">My Projects</h2>
+        <div className="flex items-center justify-center gap-4 mb-6 md:mb-8">
+          <h2 className="projects-title general-title md:leading-none text-center">
+            <span className="block text-center">EXPLORE MY</span>
+            <span className="block text-center">
+              <span className="bg-amber-800 text-amber-50 px-4 py-2 transform -rotate-1 inline-block">
+                VISIONARY
+              </span>
+            </span>
+            <span className="block text-center">WORKS</span>
+          </h2>
         </div>
 
         <div className="h-1 w-full bg-[#e8ddca] rounded-full overflow-hidden mb-8">

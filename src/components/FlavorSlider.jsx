@@ -1,11 +1,53 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { projectLists } from "../constants";
 import gsap from "gsap";
 import { useRef } from "react";
 import { useMediaQuery } from "react-responsive";
-import { FaReact, FaNodeJs, FaDatabase } from "react-icons/fa";
+import {
+  FaReact,
+  FaNodeJs,
+  FaDatabase,
+  FaFirebase,
+  FaGithub,
+  FaHtml5,
+  FaCss3Alt,
+  FaJs,
+  FaPython,
+  FaDocker,
+  FaAws,
+  FaFigma,
+  FaSass,
+  FaBootstrap,
+  FaWordpress,
+  FaPhp,
+  FaLaravel,
+  FaVuejs,
+  FaAngular,
+} from "react-icons/fa";
+import {
+  SiMongodb,
+  SiExpress,
+  SiStripe,
+  SiTailwindcss,
+  SiD3Dotjs,
+  SiPostgresql,
+  SiLeaflet,
+  SiSocketdotio,
+  SiIcons8,
+  SiFramer,
+  SiNextdotjs,
+  SiVercel,
+  SiNetlify,
+  SiHeroku,
+  SiJira,
+  SiSlack,
+  SiTrello,
+  SiNotion,
+  SiCanva,
+  SiTypescript
+} from "react-icons/si";
+import { RiFirebaseLine } from "react-icons/ri";
 
 // Enhanced color map with milk-inspired gradients matching your website
 const colorMap = {
@@ -14,13 +56,197 @@ const colorMap = {
   green: "from-green-400/20 via-green-100/30 to-green-300/25",
   yellow: "from-yellow-400/20 via-yellow-100/30 to-yellow-300/25",
   teal: "from-teal-400/20 via-teal-100/30 to-teal-300/25",
+  purple: "from-purple-400/20 via-purple-100/30 to-purple-300/25",
+  orange: "from-orange-400/20 via-orange-100/30 to-orange-300/25",
 };
 
 const techIcons = {
-  react: <FaReact className="text-blue-500" />,
-  nodejs: <FaNodeJs className="text-green-600" />,
-  mongodb: <FaDatabase className="text-green-800" />,
+  // Frontend
+  react: <FaReact className="text-blue-500" title="React" />,
+  vue: <FaVuejs className="text-green-500" title="Vue.js" />,
+  angular: <FaAngular className="text-red-500" title="Angular" />,
+  nextjs: <SiNextdotjs className="text-black" title="Next.js" />,
+  html: <FaHtml5 className="text-orange-500" title="HTML5" />,
+  css: <FaCss3Alt className="text-blue-500" title="CSS3" />,
+  sass: <FaSass className="text-pink-500" title="Sass" />,
+  tailwind: <SiTailwindcss className="text-cyan-500" title="Tailwind CSS" />,
+  bootstrap: <FaBootstrap className="text-purple-500" title="Bootstrap" />,
+  typescript: <SiTypescript className="text-blue-600" title="TypeScript" />,
+  javascript: <FaJs className="text-yellow-400" title="JavaScript" />,
+
+  // Backend
+  nodejs: <FaNodeJs className="text-green-600" title="Node.js" />,
+  express: <SiExpress className="text-gray-600" title="Express.js" />,
+  php: <FaPhp className="text-purple-600" title="PHP" />,
+  laravel: <FaLaravel className="text-red-600" title="Laravel" />,
+  python: <FaPython className="text-blue-500" title="Python" />,
+
+  // Database
+  mongodb: <SiMongodb className="text-green-600" title="MongoDB" />,
+  postgresql: <SiPostgresql className="text-blue-600" title="PostgreSQL" />,
+  mysql: <FaDatabase className="text-blue-800" title="MySQL" />,
+
+  // Services & APIs
+  firebase: <RiFirebaseLine className="text-yellow-500" title="Firebase" />,
+  stripe: <SiStripe className="text-purple-500" title="Stripe" />,
+  aws: <FaAws className="text-orange-500" title="AWS" />,
+  vercel: <SiVercel className="text-black" title="Vercel" />,
+  netlify: <SiNetlify className="text-green-500" title="Netlify" />,
+  heroku: <SiHeroku className="text-purple-500" title="Heroku" />,
+
+  // Libraries & Tools
+  gsap: <SiIcons8 className="text-green-500" title="GSAP" />,
+  framer: <SiFramer className="text-black" title="Framer Motion" />,
+  "framer-motion": <SiFramer className="text-black" title="Framer Motion" />,
+  d3: <SiD3Dotjs className="text-orange-500" title="D3.js" />,
+  socketio: <SiSocketdotio className="text-black" title="Socket.io" />,
+  "socket.io": <SiSocketdotio className="text-black" title="Socket.io" />,
+  docker: <FaDocker className="text-blue-500" title="Docker" />,
+
+  // Design & Collaboration
+  figma: <FaFigma className="text-purple-500" title="Figma" />,
+  canva: <SiCanva className="text-blue-500" title="Canva" />,
+  jira: <SiJira className="text-blue-600" title="Jira" />,
+  slack: <SiSlack className="text-purple-500" title="Slack" />,
+  trello: <SiTrello className="text-blue-500" title="Trello" />,
+  notion: <SiNotion className="text-black" title="Notion" />,
+
+  // Other
+  github: <FaGithub className="text-black" title="GitHub" />,
+  leaflet: <SiLeaflet className="text-green-500" title="Leaflet" />,
+  axios: <FaJs className="text-yellow-400" title="Axios" />,
 };
+
+const projectLists = [
+  {
+    id: 1,
+    title: "Dickman Discovery",
+    description: "A full-stack e-commerce platform built with modern technologies.",
+    descriptionPoints: [
+      "User authentication and authorization system",
+      "Product catalog with search and filtering",
+      "Shopping cart and wishlist functionality",
+      "Secure payment integration with Stripe",
+      "Admin dashboard for inventory management",
+      "Order tracking and customer support"
+    ],
+    technologies: ["react", "nodejs", "mongodb", "express", "stripe", "tailwind", "aws"],
+    image: "/images/p1.png",
+    color: "blue"
+  },
+  {
+    id: 2,
+    title: "Onroadz",
+    description: "A collaborative task management application with real-time updates.",
+    descriptionPoints: [
+      "Real-time task synchronization across devices",
+      "Drag-and-drop kanban board interface",
+      "Team collaboration and role management",
+      "File sharing and document management",
+      "Progress tracking and analytics dashboard",
+      "Mobile-responsive design for all devices"
+    ],
+    technologies: ["react", "firebase", "typescript", "tailwind", "gsap", "framer"],
+    image: "/images/p2.png",
+    color: "red"
+  },
+  {
+    id: 3,
+    title: "OneTouch",
+    description: "Analytics dashboard for social media management.",
+    descriptionPoints: [
+      "Multi-platform social media integration",
+      "Advanced data visualization with D3.js",
+      "Content scheduling and automation",
+      "Performance metrics and ROI tracking",
+      "Custom reporting and export functionality",
+      "Real-time notifications and alerts"
+    ],
+    technologies: ["react", "d3", "nodejs", "postgresql", "typescript", "tailwind"],
+    image: "/images/p3.png",
+    color: "green"
+  },
+  {
+    id: 4,
+    title: "Driving School",
+    description: "Real-time weather application with location-based forecasts.",
+    descriptionPoints: [
+      "GPS-based location detection",
+      "Real-time weather data from OpenWeather API",
+      "Interactive maps with Leaflet.js",
+      "Weather alerts and notifications",
+      "Historical weather data analysis",
+      "Offline weather information caching"
+    ],
+    technologies: ["react", "leaflet", "axios", "tailwind", "gsap"],
+    image: "/images/p4.png",
+    color: "blue"
+  },
+  {
+    id: 5,
+    title: "Portfolio Website",
+    description: "Modern portfolio website with smooth animations.",
+    descriptionPoints: [
+      "Interactive 3D animations and effects",
+      "Smooth scroll-triggered animations",
+      "Responsive design for all devices",
+      "Performance-optimized loading",
+      "SEO-friendly structure and metadata",
+      "Contact form with email integration"
+    ],
+    technologies: ["react", "gsap", "framer-motion", "sass", "nextjs", "vercel"],
+    image: "/images/p5.png",
+    color: "yellow"
+  },
+  {
+    id: 6,
+    title: "Chat Application",
+    description: "Real-time chat application with encryption.",
+    descriptionPoints: [
+      "End-to-end message encryption",
+      "Real-time messaging with Socket.io",
+      "File and media sharing capabilities",
+      "Group chat and channel management",
+      "User presence and status indicators",
+      "Message search and history retention"
+    ],
+    technologies: ["react", "socketio", "nodejs", "mongodb", "typescript", "tailwind"],
+    image: "/images/p6.png",
+    color: "teal"
+  },
+  {
+    id: 7,
+    title: "E-Learning Platform",
+    description: "Comprehensive online learning management system.",
+    descriptionPoints: [
+      "Course creation and management tools",
+      "Video streaming with adaptive quality",
+      "Interactive quizzes and assessments",
+      "Progress tracking and certificates",
+      "Discussion forums and peer learning",
+      "Mobile app for offline learning"
+    ],
+    technologies: ["react", "nodejs", "mongodb", "aws", "typescript", "tailwind", "docker"],
+    image: "/images/p7.png",
+    color: "purple"
+  },
+  {
+    id: 8,
+    title: "Restaurant Management",
+    description: "Complete restaurant operations management system.",
+    descriptionPoints: [
+      "Table reservation and management",
+      "Point of sale (POS) system",
+      "Inventory and supply chain tracking",
+      "Staff scheduling and payroll",
+      "Customer loyalty and rewards program",
+      "Analytics and business intelligence"
+    ],
+    technologies: ["react", "nodejs", "postgresql", "stripe", "typescript", "tailwind"],
+    image: "/images/p1.png",
+    color: "orange"
+  }
+];
 
 const FlavorSlider = () => {
   const sliderRef = useRef();
@@ -83,7 +309,7 @@ const FlavorSlider = () => {
     // Milk splash animations
     gsap.utils.toArray(".milk-splash-card").forEach((card, index) => {
       const splashElements = card.querySelectorAll(".splash-drop");
-      
+
       // Stagger animation for splash drops
       gsap.set(splashElements, {
         scale: 0,
@@ -161,7 +387,7 @@ const FlavorSlider = () => {
           <div
             key={project.title}
             className={`
-              milk-splash-card relative z-30 lg:w-[35vw] w-80 lg:h-[55vh] md:w-[70vw] md:h-[45vh] h-72 flex-none
+              milk-splash-card relative z-30 lg:w-[40vw] w-80 lg:h-[70vh] md:w-[75vw] md:h-[60vh] h-96 flex-none
               rounded-3xl overflow-hidden cursor-pointer
               backdrop-blur-xl border border-amber-200/40 shadow-2xl
               transition-all duration-500 hover:shadow-3xl
@@ -173,7 +399,7 @@ const FlavorSlider = () => {
             <div className="absolute inset-0 overflow-hidden">
               {/* Ripple Effect */}
               <div className="ripple-effect absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-amber-100/30 rounded-full opacity-0"></div>
-              
+
               {/* Splash Drops */}
               {Array.from({ length: 12 }).map((_, i) => (
                 <div
@@ -220,7 +446,7 @@ const FlavorSlider = () => {
               <div className="absolute -bottom-2 left-4 w-2.5 h-2.5 bg-amber-300/60 rounded-full animate-pulse delay-500"></div>
 
               {/* Project Title */}
-              <h2 className="text-4xl lg:text-5xl font-black mb-4 tracking-tight leading-tight text-amber-900 drop-shadow-lg">
+              <h2 className="text-3xl lg:text-6xl font-black mb-4 tracking-tight leading-tight text-amber-900 drop-shadow-lg">
                 {project.title}
               </h2>
 
@@ -228,21 +454,52 @@ const FlavorSlider = () => {
               <div className="w-16 h-1 bg-amber-300/80 rounded-full mb-4 shadow-lg"></div>
 
               {/* Project Description */}
-              <p className="mb-6 text-lg font-medium max-w-xs text-amber-800 drop-shadow-sm">
+              <p className="mb-5 text-2xl font-medium w-full text-amber-800 leading-relaxed drop-shadow-sm">
                 {project.description}
               </p>
 
+              {/* Project Description Points */}
+              <div className="mb-6 w-full flex justify-center">
+                <ul className="text-left space-y-2 inline-block">
+                  {project.descriptionPoints.map((point, index) => (
+                    <li key={index}
+                      className="flex items-start gap-2 text-lg text-amber-700 font-medium">
+                      <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="leading-relaxed">{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
               {/* Technologies with Milk Drop Background */}
-              <div className="flex gap-4 text-2xl">
-                {(project.technologies || []).map((tech) => (
-                  <div
-                    key={tech}
-                    className="relative p-3 bg-amber-100/40 rounded-full backdrop-blur-sm border border-amber-200/50 shadow-lg hover:scale-110 transition-transform duration-300"
-                  >
-                    <span className="relative z-10">{techIcons[tech]}</span>
-                    <div className="absolute inset-0 bg-amber-50/30 rounded-full blur-sm"></div>
-                  </div>
-                ))}
+              <div className="flex flex-wrap gap-2 justify-center max-w-full">
+                {(project.technologies || []).map((tech) => {
+                  const icon = techIcons[tech];
+                  const displayName = icon?.props?.title || tech;
+
+                  return (
+                    <div
+                      key={tech}
+                      className="relative p-2 bg-amber-100/40 rounded-full backdrop-blur-sm border border-amber-200/50 shadow-lg hover:scale-110 transition-transform duration-300 group"
+                      title={displayName}
+                    >
+                      <span className="relative z-10 text-4xl">
+                        {icon || (
+                          <span className="text-sm font-semibold text-amber-800 px-1">
+                            {tech.length > 8 ? tech.substring(0, 8) + '...' : tech}
+                          </span>
+                        )}
+                      </span>
+                      <div className="absolute inset-0 bg-amber-50/30 rounded-full blur-sm"></div>
+
+                      {/* Tooltip */}
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-amber-900 text-amber-100 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-20">
+                        {displayName}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-amber-900"></div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Floating Bubbles */}
