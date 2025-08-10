@@ -120,131 +120,81 @@ const techIcons = {
 const projectLists = [
   {
     id: 1,
-    title: "Dickman Discovery",
-    description: "A full-stack e-commerce platform built with modern technologies.",
+    title: "OneTouch",
+    description: "A full-stack field service platform built with modern technologies.",
     descriptionPoints: [
-      "User authentication and authorization system",
-      "Product catalog with search and filtering",
-      "Shopping cart and wishlist functionality",
-      "Secure payment integration with Stripe",
-      "Admin dashboard for inventory management",
-      "Order tracking and customer support"
+      "Core Features: Task management, scheduling, real-time updates, analytics.",
+      "Access Control: Role-based access for different user types.",
+      "Design: Responsive and mobile-friendly UI.",
+      "Notifications: Instant alerts and updates.",
+      "Business Impact: Boosts productivity and operational efficiency for field service management",
     ],
-    technologies: ["react", "nodejs", "mongodb", "express", "stripe", "tailwind", "aws"],
+    technologies: ["react", "nodejs", "mysql", "express", "firebase"],
     image: "/images/p1.png",
-    color: "blue"
+    color: "green"
   },
   {
     id: 2,
-    title: "Onroadz",
+    title: "Easy Field Services",
     description: "A collaborative task management application with real-time updates.",
     descriptionPoints: [
-      "Real-time task synchronization across devices",
-      "Drag-and-drop kanban board interface",
-      "Team collaboration and role management",
-      "File sharing and document management",
+      "Core Features: Task management, scheduling, real-time updates, analytics.",
+      "Access Control: Role-based access for different user types.",
+      "Design: Responsive and mobile-friendly UI.",
+      "Notifications: Instant alerts and updates.",
       "Progress tracking and analytics dashboard",
       "Mobile-responsive design for all devices"
     ],
-    technologies: ["react", "firebase", "typescript", "tailwind", "gsap", "framer"],
+    technologies: ["react", "nodejs", "mysql", "express", "firebase"],
     image: "/images/p2.png",
-    color: "red"
+    color: "blue"
   },
   {
     id: 3,
-    title: "OneTouch",
-    description: "Analytics dashboard for social media management.",
+    title: "Shanthi Gears",
+    description: "Products and Mailing Service Management System",
     descriptionPoints: [
-      "Multi-platform social media integration",
-      "Advanced data visualization with D3.js",
-      "Content scheduling and automation",
-      "Performance metrics and ROI tracking",
-      "Custom reporting and export functionality",
-      "Real-time notifications and alerts"
+      "Purpose: Manage Shanthi Gears’ product catalog, service requests, and customer interactions.",
+      "Core Features: Inventory management, service scheduling, customer engagement tools.",
+      "Special Feature: Bulk mail sending for customer communication.",
+      "Goal: Enhance operational efficiency and customer service."
     ],
-    technologies: ["react", "d3", "nodejs", "postgresql", "typescript", "tailwind"],
-    image: "/images/p3.png",
-    color: "green"
+    technologies: ["react", "nodejs", "mysql", "express", "firebase"],
+    image: "/images/p4.png",
+    color: "red"
   },
   {
     id: 4,
     title: "Driving School",
-    description: "Real-time weather application with location-based forecasts.",
+    description: "Analytics dashboard for social media management.",
     descriptionPoints: [
-      "GPS-based location detection",
-      "Real-time weather data from OpenWeather API",
-      "Interactive maps with Leaflet.js",
-      "Weather alerts and notifications",
-      "Historical weather data analysis",
-      "Offline weather information caching"
+      "Purpose: Learning Management System for students and instructors.",
+      "Key Features: Course management, automated scheduling, real-time notifications, sales & performance reporting.",
+      "Tech Stack: Firebase for authentication & notifications, MySQL for data management.",
+      "Frontend: Responsive React.js interface for seamless cross-device experience.",
+      "Impact: Enhanced operational efficiency and improved learning outcomes.",
+      "Real-time notifications and alerts"
     ],
-    technologies: ["react", "leaflet", "axios", "tailwind", "gsap"],
-    image: "/images/p4.png",
+    technologies: ["react", "nodejs", "mysql", "firebase", "express"],
+    image: "/images/p3.png",
     color: "blue"
   },
   {
     id: 5,
-    title: "Portfolio Website",
-    description: "Modern portfolio website with smooth animations.",
+    title: "Scrap Collection System",
+    description: "Manage scrap collection operations efficiently.",
     descriptionPoints: [
-      "Interactive 3D animations and effects",
-      "Smooth scroll-triggered animations",
-      "Responsive design for all devices",
-      "Performance-optimized loading",
-      "SEO-friendly structure and metadata",
-      "Contact form with email integration"
+      "Core Features: Service request handling, scheduling pickups, route optimization, and real-time tracking.",
+      "User Roles: Customers, collection agents, and admin with role-based access.",
+      "Notifications: Instant alerts for service updates and reminders.",
+      "Data Management: Centralized database for customer info, collection history, and payments.",
+      "Performance: Optimized loading & navigation for smooth user experience.",
+      "Goal: Streamline scrap collection workflows, improve customer satisfaction, and optimize resource allocation.",
+      "Security: Two-factor authentication for enhanced account security."
     ],
-    technologies: ["react", "gsap", "framer-motion", "sass", "nextjs", "vercel"],
+    technologies: ["react", "nodejs", "mysql", "express", "firebase"],
     image: "/images/p5.png",
     color: "yellow"
-  },
-  {
-    id: 6,
-    title: "Chat Application",
-    description: "Real-time chat application with encryption.",
-    descriptionPoints: [
-      "End-to-end message encryption",
-      "Real-time messaging with Socket.io",
-      "File and media sharing capabilities",
-      "Group chat and channel management",
-      "User presence and status indicators",
-      "Message search and history retention"
-    ],
-    technologies: ["react", "socketio", "nodejs", "mongodb", "typescript", "tailwind"],
-    image: "/images/p6.png",
-    color: "teal"
-  },
-  {
-    id: 7,
-    title: "E-Learning Platform",
-    description: "Comprehensive online learning management system.",
-    descriptionPoints: [
-      "Course creation and management tools",
-      "Video streaming with adaptive quality",
-      "Interactive quizzes and assessments",
-      "Progress tracking and certificates",
-      "Discussion forums and peer learning",
-      "Mobile app for offline learning"
-    ],
-    technologies: ["react", "nodejs", "mongodb", "aws", "typescript", "tailwind", "docker"],
-    image: "/images/p7.png",
-    color: "purple"
-  },
-  {
-    id: 8,
-    title: "Restaurant Management",
-    description: "Complete restaurant operations management system.",
-    descriptionPoints: [
-      "Table reservation and management",
-      "Point of sale (POS) system",
-      "Inventory and supply chain tracking",
-      "Staff scheduling and payroll",
-      "Customer loyalty and rewards program",
-      "Analytics and business intelligence"
-    ],
-    technologies: ["react", "nodejs", "postgresql", "stripe", "typescript", "tailwind"],
-    image: "/images/p1.png",
-    color: "orange"
   }
 ];
 
@@ -381,14 +331,15 @@ const FlavorSlider = () => {
   });
 
   return (
-    <div ref={sliderRef} className="slider-wrapper">
-      <div className="flavors">
+    <div ref={sliderRef} className="slider-wrapper w-full">
+      <div className="flavors flex gap-6 sm:gap-8 lg:gap-10 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 min-w-max">
         {projectLists.map((project, index) => (
           <div
             key={project.title}
             className={`
-              milk-splash-card relative z-30 lg:w-[40vw] w-80 lg:h-[70vh] md:w-[75vw] md:h-[60vh] h-96 flex-none
-              rounded-3xl overflow-hidden cursor-pointer
+              milk-splash-card relative z-30 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl
+              h-auto min-h-[26rem] sm:min-h-[28rem] md:min-h-[32rem] lg:min-h-[36rem] xl:min-h-[40rem] flex-none
+              rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer
               backdrop-blur-xl border border-amber-200/40 shadow-2xl
               transition-all duration-500 hover:shadow-3xl
               bg-gradient-to-br ${colorMap[project.color] || "from-amber-200/20 via-amber-100/30 to-amber-300/25"}
@@ -439,40 +390,43 @@ const FlavorSlider = () => {
             </div>
 
             {/* Card Content */}
-            <div className="card-content relative p-6 h-full flex flex-col justify-center items-center text-center z-10">
+            <div className="card-content relative p-3 sm:p-4 lg:p-6 h-full flex flex-col justify-between items-center text-center z-10">
               {/* Floating Milk Droplets around title */}
-              <div className="absolute -top-2 -left-2 w-3 h-3 bg-amber-200/70 rounded-full animate-pulse"></div>
-              <div className="absolute -top-1 -right-3 w-2 h-2 bg-amber-100/60 rounded-full animate-pulse delay-300"></div>
-              <div className="absolute -bottom-2 left-4 w-2.5 h-2.5 bg-amber-300/60 rounded-full animate-pulse delay-500"></div>
+              <div className="absolute -top-1 sm:-top-2 -left-1 sm:-left-2 w-2 sm:w-3 h-2 sm:h-3 bg-amber-200/70 rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-2 sm:-right-3 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-amber-100/60 rounded-full animate-pulse delay-300"></div>
+              <div className="absolute -bottom-1 sm:-bottom-2 left-2 sm:left-4 w-2 sm:w-2.5 h-2 sm:h-2.5 bg-amber-300/60 rounded-full animate-pulse delay-500"></div>
 
+              {/* Content Container */}
+              <div className="w-full flex flex-col items-center flex-1 justify-start min-h-0">
               {/* Project Title */}
-              <h2 className="text-3xl lg:text-6xl font-black mb-4 tracking-tight leading-tight text-amber-900 drop-shadow-lg">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-black mb-2 sm:mb-3 lg:mb-4 tracking-tight leading-tight text-amber-900 drop-shadow-lg break-words text-center max-w-full px-1">
                 {project.title}
               </h2>
 
               {/* Milk Splash Divider */}
-              <div className="w-16 h-1 bg-amber-300/80 rounded-full mb-4 shadow-lg"></div>
+                <div className="w-8 sm:w-12 lg:w-16 h-0.5 sm:h-1 bg-amber-300/80 rounded-full mb-2 sm:mb-3 lg:mb-4 shadow-lg"></div>
 
               {/* Project Description */}
-              <p className="mb-5 text-2xl font-medium w-full text-amber-800 leading-relaxed drop-shadow-sm">
+                <p className="mb-3 sm:mb-4 lg:mb-5 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-medium w-full text-amber-800 leading-relaxed drop-shadow-sm break-words text-center px-2 max-w-full">
                 {project.description}
               </p>
 
               {/* Project Description Points */}
-              <div className="mb-6 w-full flex justify-center">
-                <ul className="text-left space-y-2 inline-block">
+                <div className="mb-3 sm:mb-4 lg:mb-6 w-full flex justify-center flex-1 min-h-0">
+                  <ul className="text-left space-y-1 sm:space-y-1.5 lg:space-y-2 inline-block w-full max-w-full px-2">
                   {project.descriptionPoints.map((point, index) => (
                     <li key={index}
-                      className="flex items-start gap-2 text-lg text-amber-700 font-medium">
-                      <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="leading-relaxed">{point}</span>
+                        className="flex items-start gap-1.5 sm:gap-2 text-xs sm:text-sm md:text-base lg:text-lg text-amber-700 font-medium leading-relaxed w-full">
+                        <div className="w-1 sm:w-1.5 lg:w-2 h-1 sm:h-1.5 lg:h-2 bg-amber-400 rounded-full mt-1 sm:mt-1.5 lg:mt-2 flex-shrink-0"></div>
+                        <span className="leading-relaxed break-words flex-1 min-w-0 hyphens-auto max-w-full text-left">{point}</span>
                     </li>
                   ))}
                 </ul>
+                </div>
               </div>
 
               {/* Technologies with Milk Drop Background */}
-              <div className="flex flex-wrap gap-2 justify-center max-w-full">
+              <div className="flex flex-wrap gap-1 sm:gap-1.5 lg:gap-2 justify-center max-w-full mt-2 sm:mt-3 lg:mt-4 px-2 flex-shrink-0">
                 {(project.technologies || []).map((tech) => {
                   const icon = techIcons[tech];
                   const displayName = icon?.props?.title || tech;
@@ -480,13 +434,13 @@ const FlavorSlider = () => {
                   return (
                     <div
                       key={tech}
-                      className="relative p-2 bg-amber-100/40 rounded-full backdrop-blur-sm border border-amber-200/50 shadow-lg hover:scale-110 transition-transform duration-300 group"
+                      className="relative p-1 sm:p-1.5 lg:p-2 bg-amber-100/40 rounded-full backdrop-blur-sm border border-amber-200/50 shadow-lg hover:scale-110 transition-transform duration-300 group flex-shrink-0"
                       title={displayName}
                     >
-                      <span className="relative z-10 text-4xl">
+                      <span className="relative z-10 text-lg sm:text-xl lg:text-2xl xl:text-3xl">
                         {icon || (
-                          <span className="text-sm font-semibold text-amber-800 px-1">
-                            {tech.length > 8 ? tech.substring(0, 8) + '...' : tech}
+                          <span className="text-xs sm:text-sm lg:text-base font-semibold text-amber-800 px-1">
+                            {tech.length > 5 ? tech.substring(0, 5) + '...' : tech}
                           </span>
                         )}
                       </span>
@@ -503,9 +457,9 @@ const FlavorSlider = () => {
               </div>
 
               {/* Floating Bubbles */}
-              <div className="absolute top-8 right-8 w-4 h-4 bg-amber-200/40 rounded-full animate-bounce"></div>
-              <div className="absolute bottom-8 left-8 w-3 h-3 bg-amber-100/50 rounded-full animate-bounce delay-700"></div>
-              <div className="absolute top-16 left-16 w-2 h-2 bg-amber-300/50 rounded-full animate-bounce delay-1000"></div>
+              <div className="absolute top-2 sm:top-4 lg:top-8 right-2 sm:right-4 lg:right-8 w-2 sm:w-3 lg:w-4 h-2 sm:h-3 lg:h-4 bg-amber-200/40 rounded-full animate-bounce"></div>
+              <div className="absolute bottom-2 sm:bottom-4 lg:bottom-8 left-2 sm:left-4 lg:left-8 w-1.5 sm:w-2 lg:w-3 h-1.5 sm:h-2 lg:h-3 bg-amber-100/50 rounded-full animate-bounce delay-700"></div>
+              <div className="absolute top-4 sm:top-8 lg:top-16 left-4 sm:left-8 lg:left-16 w-1 sm:w-1.5 lg:w-2 h-1 sm:h-1.5 lg:h-2 bg-amber-300/50 rounded-full animate-bounce delay-1000"></div>
             </div>
 
             {/* Milk Pour Effect on Hover */}
