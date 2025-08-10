@@ -6,7 +6,7 @@ import { SplitText } from "gsap/all";
 import EagleAnimation from "@/components/EagleAnimation";
 
 
-const HeroSection = () => {
+const HeroSection = ({ onAnimationComplete }) => {
   useGSAP(() => {
     const titleSplit = SplitText.create(".hero-title", {
       type: "chars",
@@ -45,7 +45,13 @@ const HeroSection = () => {
           ease: "power2.out",
         },
         "-=0.5"
-      );
+      )
+      .call(() => {
+        // Call the callback when hero animation completes
+        if (onAnimationComplete) {
+          onAnimationComplete();
+        }
+      });
 
     const heroTl = gsap.timeline({
       scrollTrigger: {

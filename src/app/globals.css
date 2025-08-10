@@ -376,3 +376,229 @@ body::-webkit-scrollbar {
     transform: translateY(-15px) rotate(2deg);
   }
 }
+
+/* Post-Hero Loader Animations */
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutToBottom {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes progressFill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Utility classes for animations */
+.animate-slide-in-top {
+  animation: slideInFromTop 0.5s ease-out forwards;
+}
+
+.animate-slide-out-bottom {
+  animation: slideOutToBottom 0.5s ease-out forwards;
+}
+
+.animate-progress-fill {
+  animation: progressFill 2s ease-out forwards;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Loader Component Animations */
+@keyframes splashOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes ringsExplode {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.5) rotate(180deg);
+  }
+  100% {
+    transform: scale(2) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-splash-out {
+  animation: splashOut 1s ease-out forwards;
+}
+
+.animate-rings-explode {
+  animation: ringsExplode 1s ease-out forwards;
+}
+
+/* 3D Spinning Animations for Loader */
+@keyframes spin3dOuter {
+  0% {
+    transform: rotateY(180deg) rotateX(180deg) rotateZ(180deg) scale(1);
+  }
+  50% {
+    transform: rotateY(270deg) rotateX(270deg) rotateZ(270deg) scale(1.2);
+  }
+  70% {
+    transform: rotateY(360deg) rotateX(360deg) rotateZ(360deg) scale(1);
+  }
+  80% {
+    transform: rotateY(450deg) rotateX(450deg) rotateZ(450deg) scale(1.2);
+  }
+  100% {
+    transform: rotateY(540deg) rotateX(540deg) rotateZ(540deg) scale(1);
+  }
+}
+
+@keyframes spin3dOuterAlt {
+  0% {
+    transform: rotateY(90deg) rotateX(90deg) rotateZ(90deg) scale(1);
+  }
+  50% {
+    transform: rotateY(180deg) rotateX(180deg) rotateZ(180deg) scale(1.2);
+  }
+  70% {
+    transform: rotateY(270deg) rotateX(270deg) rotateZ(270deg) scale(1);
+  }
+  80% {
+    transform: rotateY(360deg) rotateX(360deg) rotateZ(360deg) scale(1.2);
+  }
+  100% {
+    transform: rotateY(450deg) rotateX(450deg) rotateZ(450deg) scale(1);
+  }
+}
+
+@keyframes spin3dInner {
+  0% {
+    transform: rotateY(360deg) rotateX(360deg) rotateZ(360deg) scale(1);
+  }
+  50% {
+    transform: rotateY(450deg) rotateX(450deg) rotateZ(450deg) scale(1.2);
+  }
+  70% {
+    transform: rotateY(540deg) rotateX(540deg) rotateZ(540deg) scale(1);
+  }
+  80% {
+    transform: rotateY(630deg) rotateX(630deg) rotateZ(630deg) scale(1.2);
+  }
+  100% {
+    transform: rotateY(720deg) rotateX(720deg) rotateZ(720deg) scale(1);
+  }
+}
+
+@keyframes spin3dInnerAlt {
+  0% {
+    transform: rotateY(270deg) rotateX(270deg) rotateZ(270deg) scale(1);
+  }
+  50% {
+    transform: rotateY(360deg) rotateX(360deg) rotateZ(360deg) scale(1.2);
+  }
+  70% {
+    transform: rotateY(450deg) rotateX(450deg) rotateZ(450deg) scale(1);
+  }
+  80% {
+    transform: rotateY(540deg) rotateX(540deg) rotateZ(540deg) scale(1.2);
+  }
+  100% {
+    transform: rotateY(630deg) rotateX(630deg) rotateZ(630deg) scale(1);
+  }
+}
+
+.animate-spin-3d-outer {
+  animation: spin3dOuter 7s ease-in-out infinite;
+}
+
+.animate-spin-3d-outer-alt {
+  animation: spin3dOuterAlt 7s ease-in-out infinite;
+}
+
+.animate-spin-3d-inner {
+  animation: spin3dInner 7s ease-in-out infinite;
+}
+
+.animate-spin-3d-inner-alt {
+  animation: spin3dInnerAlt 7s ease-in-out infinite;
+}
+
+/* Bounce Animation for PostHeroLoader */
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+/* Ping Animation for SuspenseLoader */
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-ping {
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Spin Animation for PostHeroLoader */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
