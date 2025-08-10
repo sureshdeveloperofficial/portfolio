@@ -2,7 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import {
   FaReact,
@@ -200,15 +200,62 @@ const projectLists = [
 
 const FlavorSlider = () => {
   const sliderRef = useRef();
+  const [isMobile, setIsMobile] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   const isTablet = useMediaQuery({
     query: "(max-width: 1024px)",
   });
 
+  const isMobileDevice = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
+
+  const isSmallMobile = useMediaQuery({
+    query: "(max-width: 480px)",
+  });
+
+  useEffect(() => {
+    setIsMobile(isMobileDevice);
+  }, [isMobileDevice]);
+
+  // Debug logging
+  useEffect(() => {
+    console.log('FlavorSlider - Mobile detection:', { isMobile, isTablet, isSmallMobile });
+    console.log('FlavorSlider - Project count:', projectLists.length);
+  }, [isMobile, isTablet, isSmallMobile, projectLists.length]);
+
+  // Touch handling for mobile swipe
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe || isRightSwipe) {
+      // Handle swipe navigation here if needed
+      console.log('Swipe detected:', isLeftSwipe ? 'left' : 'right');
+    }
+    
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
+
   useGSAP(() => {
     const scrollAmount = sliderRef.current.scrollWidth - window.innerWidth;
 
-    if (!isTablet) {
+    // Only apply horizontal scroll animation on larger screens
+    if (!isTablet && !isMobile) {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".flavor-section",
@@ -225,6 +272,7 @@ const FlavorSlider = () => {
       });
     }
 
+    // Mobile-friendly title animations
     const titleTl = gsap.timeline({
       scrollTrigger: {
         trigger: ".flavor-section",
@@ -236,13 +284,13 @@ const FlavorSlider = () => {
 
     titleTl
       .to(".first-text-split", {
-        xPercent: -30,
+        xPercent: isMobile ? -15 : -30,
         ease: "power1.inOut",
       })
       .to(
         ".flavor-text-scroll",
         {
-          xPercent: -22,
+          xPercent: isMobile ? -12 : -22,
           ease: "power1.inOut",
         },
         "<"
@@ -250,11 +298,15 @@ const FlavorSlider = () => {
       .to(
         ".second-text-split",
         {
-          xPercent: -10,
+          xPercent: isMobile ? -5 : -10,
           ease: "power1.inOut",
         },
         "<"
       );
+
+    // Mobile-optimized animations
+    const animationDuration = isMobile ? 0.2 : 0.3;
+    const animationScale = isMobile ? 1.01 : 1.02;
 
     // Milk splash animations
     gsap.utils.toArray(".milk-splash-card").forEach((card, index) => {
@@ -267,207 +319,333 @@ const FlavorSlider = () => {
         rotation: "random(-360, 360)",
       });
 
-      // Hover animations
-      card.addEventListener("mouseenter", () => {
-        gsap.to(card.querySelector(".card-content"), {
-          y: -5,
-          scale: 1.02,
-          duration: 0.3,
-          ease: "power2.out",
+      // Touch-friendly hover animations for mobile
+      if (isMobile) {
+        // Touch events for mobile
+        card.addEventListener("touchstart", () => {
+          gsap.to(card.querySelector(".card-content"), {
+            y: -2,
+            scale: animationScale,
+            duration: animationDuration,
+            ease: "power2.out",
+          });
+
+          gsap.to(splashElements, {
+            scale: "random(0.6, 1.0)",
+            opacity: "random(0.4, 0.7)",
+            duration: animationDuration,
+            stagger: 0.03,
+            ease: "back.out(1.4)",
+          });
+
+          gsap.to(card.querySelector(".ripple-effect"), {
+            scale: 1.3,
+            opacity: 0.2,
+            duration: animationDuration * 2,
+            ease: "power2.out",
+          });
         });
 
-        gsap.to(splashElements, {
-          scale: "random(0.8, 1.2)",
-          opacity: "random(0.6, 0.9)",
-          duration: 0.4,
-          stagger: 0.05,
-          ease: "back.out(1.7)",
+        card.addEventListener("touchend", () => {
+          gsap.to(card.querySelector(".card-content"), {
+            y: 0,
+            scale: 1,
+            duration: animationDuration,
+            ease: "power2.out",
+          });
+
+          gsap.to(splashElements, {
+            scale: 0,
+            opacity: 0,
+            duration: animationDuration,
+            stagger: 0.01,
+            ease: "power2.in",
+          });
+
+          gsap.to(card.querySelector(".ripple-effect"), {
+            scale: 1,
+            opacity: 0,
+            duration: animationDuration * 1.5,
+            ease: "power2.out",
+          });
+        });
+      } else {
+        // Desktop hover animations
+        card.addEventListener("mouseenter", () => {
+          gsap.to(card.querySelector(".card-content"), {
+            y: -5,
+            scale: animationScale,
+            duration: animationDuration,
+            ease: "power2.out",
+          });
+
+          gsap.to(splashElements, {
+            scale: "random(0.8, 1.2)",
+            opacity: "random(0.6, 0.9)",
+            duration: animationDuration,
+            stagger: 0.05,
+            ease: "back.out(1.7)",
+          });
+
+          gsap.to(card.querySelector(".ripple-effect"), {
+            scale: 1.5,
+            opacity: 0.3,
+            duration: animationDuration * 2,
+            ease: "power2.out",
+          });
         });
 
-        gsap.to(card.querySelector(".ripple-effect"), {
-          scale: 1.5,
-          opacity: 0.3,
-          duration: 0.6,
-          ease: "power2.out",
-        });
-      });
+        card.addEventListener("mouseleave", () => {
+          gsap.to(card.querySelector(".card-content"), {
+            y: 0,
+            scale: 1,
+            duration: animationDuration,
+            ease: "power2.out",
+          });
 
-      card.addEventListener("mouseleave", () => {
-        gsap.to(card.querySelector(".card-content"), {
-          y: 0,
-          scale: 1,
-          duration: 0.3,
-          ease: "power2.out",
-        });
+          gsap.to(splashElements, {
+            scale: 0,
+            opacity: 0,
+            duration: animationDuration,
+            stagger: 0.02,
+            ease: "power2.in",
+          });
 
-        gsap.to(splashElements, {
-          scale: 0,
-          opacity: 0,
-          duration: 0.3,
-          stagger: 0.02,
-          ease: "power2.in",
+          gsap.to(card.querySelector(".ripple-effect"), {
+            scale: 1,
+            opacity: 0,
+            duration: animationDuration * 1.5,
+            ease: "power2.out",
+          });
         });
-
-        gsap.to(card.querySelector(".ripple-effect"), {
-          scale: 1,
-          opacity: 0,
-          duration: 0.4,
-          ease: "power2.out",
-        });
-      });
+      }
     });
 
-    // Continuous floating animation for cards
+    // Mobile-optimized floating animation
+    const floatDistance = isMobile ? 5 : 10;
+    const floatDuration = isMobile ? "random(1.5, 3)" : "random(2, 4)";
+
     gsap.utils.toArray(".milk-splash-card").forEach((card, index) => {
       gsap.to(card, {
-        y: "random(-10, 10)",
-        duration: "random(2, 4)",
+        y: `random(-${floatDistance}, ${floatDistance})`,
+        duration: floatDuration,
         repeat: -1,
         yoyo: true,
         ease: "power1.inOut",
-        delay: index * 0.2,
+        delay: index * (isMobile ? 0.1 : 0.2),
       });
     });
   });
 
   return (
-    <div ref={sliderRef} className="slider-wrapper w-full">
-      <div className="flavors flex gap-6 sm:gap-8 lg:gap-10 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 min-w-max">
-        {projectLists.map((project, index) => (
-          <div
-            key={project.title}
-            className={`
-              milk-splash-card relative z-30 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl
-              h-auto min-h-[26rem] sm:min-h-[28rem] md:min-h-[32rem] lg:min-h-[36rem] xl:min-h-[40rem] flex-none
-              rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer
-              backdrop-blur-xl border border-amber-200/40 shadow-2xl
-              transition-all duration-500 hover:shadow-3xl
-              bg-gradient-to-br ${colorMap[project.color] || "from-amber-200/20 via-amber-100/30 to-amber-300/25"}
-              hover:bg-gradient-to-br hover:${colorMap[project.color] || "from-amber-200/30 via-amber-100/40 to-amber-300/35"}
-            `}
-          >
-            {/* Milk Splash Effects */}
-            <div className="absolute inset-0 overflow-hidden">
-              {/* Ripple Effect */}
-              <div className="ripple-effect absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-amber-100/30 rounded-full opacity-0"></div>
+    <>
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        @media (max-width: 768px) {
+          .slider-wrapper {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            overflow-x: auto;
+            width: 100%;
+            max-width: 100vw;
+          }
+          .flavors {
+            min-width: max-content;
+            padding-right: 20px;
+            display: flex;
+            gap: 12px;
+          }
+          .milk-splash-card {
+            min-width: 280px;
+            max-width: 280px;
+            flex-shrink: 0;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+          }
+          .milk-splash-card * {
+            visibility: visible !important;
+            opacity: 1 !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .milk-splash-card {
+            min-width: 260px;
+            max-width: 260px;
+          }
+        }
+      `}</style>
+      <div 
+        ref={sliderRef} 
+        className={`slider-wrapper w-full overflow-x-auto ${isMobile ? 'touch-pan-x scrollbar-hide' : ''}`}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          WebkitOverflowScrolling: 'touch'
+        }}
+      >
+        <div className={`flavors flex gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-4 md:py-6 lg:py-8 min-w-max ${isMobile ? 'touch-pan-x' : ''}`} style={{ minWidth: 'max-content' }}>
+          {console.log('Rendering projects:', projectLists)}
+          {projectLists && projectLists.length > 0 ? projectLists.map((project, index) => (
+            <div
+              key={project.title || index}
+              className={`
+                milk-splash-card relative z-30 
+                w-[280px] sm:w-[320px] md:w-[384px] lg:w-[448px] xl:w-[512px] 2xl:w-[576px]
+                h-auto min-h-[20rem] sm:min-h-[22rem] md:min-h-[26rem] lg:min-h-[30rem] xl:min-h-[34rem] 2xl:min-h-[38rem] 
+                flex-none
+                rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl cursor-pointer
+                backdrop-blur-xl border border-amber-200/40 shadow-lg sm:shadow-xl lg:shadow-2xl
+                transition-all duration-300 hover:shadow-2xl sm:hover:shadow-3xl
+                bg-gradient-to-br ${colorMap[project.color] || "from-amber-200/20 via-amber-100/30 to-amber-300/25"}
+                hover:bg-gradient-to-br hover:${colorMap[project.color] || "from-amber-200/30 via-amber-100/40 to-amber-300/35"}
+                ${isMobile ? 'active:scale-95' : ''}
+              `}
+              style={{
+                minWidth: isMobile ? '280px' : 'auto',
+                display: 'block',
+                visibility: 'visible',
+                opacity: 1
+              }}
+            >
+              {/* Milk Splash Effects */}
+              <div className="absolute inset-0">
+                {/* Ripple Effect */}
+                <div className="ripple-effect absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 sm:w-24 md:w-28 lg:w-32 h-20 sm:h-24 md:h-28 lg:h-32 bg-amber-100/30 rounded-full opacity-0"></div>
 
-              {/* Splash Drops */}
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="splash-drop absolute bg-amber-100/50 rounded-full"
-                  style={{
-                    width: `${Math.random() * 8 + 4}px`,
-                    height: `${Math.random() * 8 + 4}px`,
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                  }}
-                ></div>
-              ))}
+                {/* Splash Drops */}
+                {Array.from({ length: isMobile ? 8 : 12 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="splash-drop absolute bg-amber-100/50 rounded-full"
+                    style={{
+                      width: `${Math.random() * (isMobile ? 6 : 8) + (isMobile ? 3 : 4)}px`,
+                      height: `${Math.random() * (isMobile ? 6 : 8) + (isMobile ? 3 : 4)}px`,
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                  ></div>
+                ))}
 
-              {/* Milk Swirl Pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <svg viewBox="0 0 400 400" className="w-full h-full">
-                  <path
-                    d="M50,200 Q200,50 350,200 Q200,350 50,200"
-                    fill="none"
-                    stroke="#d4a574"
-                    strokeWidth="2"
-                    opacity="0.3"
-                  />
-                  <path
-                    d="M100,150 Q250,100 300,250 Q150,300 100,150"
-                    fill="none"
-                    stroke="#d4a574"
-                    strokeWidth="1.5"
-                    opacity="0.2"
-                  />
-                </svg>
-              </div>
-
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-radial from-transparent via-amber-50/10 to-amber-100/20"></div>
-            </div>
-
-            {/* Card Content */}
-            <div className="card-content relative p-3 sm:p-4 lg:p-6 h-full flex flex-col justify-between items-center text-center z-10">
-              {/* Floating Milk Droplets around title */}
-              <div className="absolute -top-1 sm:-top-2 -left-1 sm:-left-2 w-2 sm:w-3 h-2 sm:h-3 bg-amber-200/70 rounded-full animate-pulse"></div>
-              <div className="absolute -top-1 -right-2 sm:-right-3 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-amber-100/60 rounded-full animate-pulse delay-300"></div>
-              <div className="absolute -bottom-1 sm:-bottom-2 left-2 sm:left-4 w-2 sm:w-2.5 h-2 sm:h-2.5 bg-amber-300/60 rounded-full animate-pulse delay-500"></div>
-
-              {/* Content Container */}
-              <div className="w-full flex flex-col items-center flex-1 justify-start min-h-0">
-              {/* Project Title */}
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-black mb-2 sm:mb-3 lg:mb-4 tracking-tight leading-tight text-amber-900 drop-shadow-lg break-words text-center max-w-full px-1">
-                {project.title}
-              </h2>
-
-              {/* Milk Splash Divider */}
-                <div className="w-8 sm:w-12 lg:w-16 h-0.5 sm:h-1 bg-amber-300/80 rounded-full mb-2 sm:mb-3 lg:mb-4 shadow-lg"></div>
-
-              {/* Project Description */}
-                <p className="mb-3 sm:mb-4 lg:mb-5 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-medium w-full text-amber-800 leading-relaxed drop-shadow-sm break-words text-center px-2 max-w-full">
-                {project.description}
-              </p>
-
-              {/* Project Description Points */}
-                <div className="mb-3 sm:mb-4 lg:mb-6 w-full flex justify-center flex-1 min-h-0">
-                  <ul className="text-left space-y-1 sm:space-y-1.5 lg:space-y-2 inline-block w-full max-w-full px-2">
-                  {project.descriptionPoints.map((point, index) => (
-                    <li key={index}
-                        className="flex items-start gap-1.5 sm:gap-2 text-xs sm:text-sm md:text-base lg:text-lg text-amber-700 font-medium leading-relaxed w-full">
-                        <div className="w-1 sm:w-1.5 lg:w-2 h-1 sm:h-1.5 lg:h-2 bg-amber-400 rounded-full mt-1 sm:mt-1.5 lg:mt-2 flex-shrink-0"></div>
-                        <span className="leading-relaxed break-words flex-1 min-w-0 hyphens-auto max-w-full text-left">{point}</span>
-                    </li>
-                  ))}
-                </ul>
+                {/* Milk Swirl Pattern */}
+                <div className="absolute inset-0 opacity-10">
+                  <svg viewBox="0 0 400 400" className="w-full h-full">
+                    <path
+                      d="M50,200 Q200,50 350,200 Q200,350 50,200"
+                      fill="none"
+                      stroke="#d4a574"
+                      strokeWidth="2"
+                      opacity="0.3"
+                    />
+                    <path
+                      d="M100,150 Q250,100 300,250 Q150,300 100,150"
+                      fill="none"
+                      stroke="#d4a574"
+                      strokeWidth="1.5"
+                      opacity="0.2"
+                    />
+                  </svg>
                 </div>
+
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-radial from-transparent via-amber-50/10 to-amber-100/20"></div>
               </div>
 
-              {/* Technologies with Milk Drop Background */}
-              <div className="flex flex-wrap gap-1 sm:gap-1.5 lg:gap-2 justify-center max-w-full mt-2 sm:mt-3 lg:mt-4 px-2 flex-shrink-0">
-                {(project.technologies || []).map((tech) => {
-                  const icon = techIcons[tech];
-                  const displayName = icon?.props?.title || tech;
+              {/* Card Content */}
+              <div className="card-content relative p-2 sm:p-3 md:p-4 lg:p-6 h-full flex flex-col justify-between items-center text-center z-10">
+                {/* Floating Milk Droplets around title */}
+                <div className="absolute -top-1 sm:-top-1.5 md:-top-2 -left-1 sm:-left-1.5 md:-left-2 w-1.5 sm:w-2 md:w-3 h-1.5 sm:h-2 md:h-3 bg-amber-200/70 rounded-full animate-pulse"></div>
+                <div className="absolute -top-1 -right-1.5 sm:-right-2 md:-right-3 w-1 sm:w-1.5 md:w-2 h-1 sm:h-1.5 md:h-2 bg-amber-100/60 rounded-full animate-pulse delay-300"></div>
+                <div className="absolute -bottom-1 sm:-bottom-1.5 md:-bottom-2 left-1.5 sm:left-2 md:left-4 w-1.5 sm:w-2 md:w-2.5 h-1.5 sm:h-2 md:h-2.5 bg-amber-300/60 rounded-full animate-pulse delay-500"></div>
 
-                  return (
-                    <div
-                      key={tech}
-                      className="relative p-1 sm:p-1.5 lg:p-2 bg-amber-100/40 rounded-full backdrop-blur-sm border border-amber-200/50 shadow-lg hover:scale-110 transition-transform duration-300 group flex-shrink-0"
-                      title={displayName}
-                    >
-                      <span className="relative z-10 text-lg sm:text-xl lg:text-2xl xl:text-3xl">
-                        {icon || (
-                          <span className="text-xs sm:text-sm lg:text-base font-semibold text-amber-800 px-1">
-                            {tech.length > 5 ? tech.substring(0, 5) + '...' : tech}
-                          </span>
+                {/* Content Container */}
+                <div className="w-full flex flex-col items-center flex-1 justify-start min-h-0">
+                  {/* Project Title */}
+                  <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-black mb-1.5 sm:mb-2 md:mb-3 lg:mb-4 tracking-tight leading-tight text-amber-900 drop-shadow-lg break-words text-center max-w-full px-1">
+                    {project.title}
+                  </h2>
+
+                  {/* Milk Splash Divider */}
+                  <div className="w-6 sm:w-8 md:w-10 lg:w-12 xl:w-16 h-0.5 sm:h-0.5 md:h-1 bg-amber-300/80 rounded-full mb-1.5 sm:mb-2 md:mb-3 lg:mb-4 shadow-lg"></div>
+
+                  {/* Project Description */}
+                  <p className="mb-2 sm:mb-3 md:mb-4 lg:mb-5 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-medium w-full text-amber-800 leading-relaxed drop-shadow-sm break-words text-center px-1 sm:px-2 max-w-full">
+                    {project.description}
+                  </p>
+
+                  {/* Project Description Points */}
+                  <div className="mb-2 sm:mb-3 md:mb-4 lg:mb-6 w-full flex justify-center flex-1 min-h-0">
+                    <ul className="text-left space-y-0.5 sm:space-y-1 md:space-y-1.5 lg:space-y-2 inline-block w-full max-w-full px-1 sm:px-2">
+                      {project.descriptionPoints.map((point, index) => (
+                        <li key={index}
+                            className="flex items-start gap-1 sm:gap-1.5 md:gap-2 text-xs sm:text-sm md:text-base lg:text-lg text-amber-700 font-medium leading-relaxed w-full">
+                          <div className="w-1 sm:w-1 md:w-1.5 lg:w-2 h-1 sm:h-1 md:h-1.5 lg:h-2 bg-amber-400 rounded-full mt-1 sm:mt-1 md:mt-1.5 lg:mt-2 flex-shrink-0"></div>
+                          <span className="leading-relaxed break-words flex-1 min-w-0 hyphens-auto max-w-full text-left">{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Technologies with Milk Drop Background */}
+                <div className="flex flex-wrap gap-1 sm:gap-1.5 md:gap-2 justify-center max-w-full mt-1.5 sm:mt-2 md:mt-3 lg:mt-4 px-1 sm:px-2 flex-shrink-0">
+                  {(project.technologies || []).map((tech) => {
+                    const icon = techIcons[tech];
+                    const displayName = icon?.props?.title || tech;
+
+                    return (
+                      <div
+                        key={tech}
+                        className="relative p-1 sm:p-1.5 md:p-2 bg-amber-100/40 rounded-full backdrop-blur-sm border border-amber-200/50 shadow-lg hover:scale-110 active:scale-95 transition-transform duration-300 group flex-shrink-0"
+                        title={displayName}
+                      >
+                        <span className="relative z-10 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">
+                          {icon || (
+                            <span className="text-xs sm:text-sm lg:text-base font-semibold text-amber-800 px-1">
+                              {tech.length > 5 ? tech.substring(0, 5) + '...' : tech}
+                            </span>
+                          )}
+                        </span>
+                        <div className="absolute inset-0 bg-amber-50/30 rounded-full blur-sm"></div>
+
+                        {/* Tooltip - Hidden on mobile for better UX */}
+                        {!isMobile && (
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-amber-900 text-amber-100 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-20">
+                            {displayName}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-amber-900"></div>
+                          </div>
                         )}
-                      </span>
-                      <div className="absolute inset-0 bg-amber-50/30 rounded-full blur-sm"></div>
-
-                      {/* Tooltip */}
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-amber-900 text-amber-100 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-20">
-                        {displayName}
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-amber-900"></div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+
+                {/* Floating Bubbles */}
+                <div className="absolute top-1 sm:top-2 md:top-4 lg:top-8 right-1 sm:right-2 md:right-4 lg:right-8 w-1.5 sm:w-2 md:w-3 lg:w-4 h-1.5 sm:h-2 md:h-3 lg:h-4 bg-amber-200/40 rounded-full animate-bounce"></div>
+                <div className="absolute bottom-1 sm:bottom-2 md:bottom-4 lg:bottom-8 left-1 sm:left-2 md:left-4 lg:left-8 w-1 sm:w-1.5 md:w-2 lg:w-3 h-1 sm:h-1.5 md:h-2 lg:h-3 bg-amber-100/50 rounded-full animate-bounce delay-700"></div>
+                <div className="absolute top-2 sm:top-4 md:top-8 lg:top-16 left-2 sm:left-4 md:left-8 lg:left-16 w-0.5 sm:w-1 md:w-1.5 lg:w-2 h-0.5 sm:h-1 md:h-1.5 lg:h-2 bg-amber-300/50 rounded-full animate-bounce delay-1000"></div>
               </div>
 
-              {/* Floating Bubbles */}
-              <div className="absolute top-2 sm:top-4 lg:top-8 right-2 sm:right-4 lg:right-8 w-2 sm:w-3 lg:w-4 h-2 sm:h-3 lg:h-4 bg-amber-200/40 rounded-full animate-bounce"></div>
-              <div className="absolute bottom-2 sm:bottom-4 lg:bottom-8 left-2 sm:left-4 lg:left-8 w-1.5 sm:w-2 lg:w-3 h-1.5 sm:h-2 lg:h-3 bg-amber-100/50 rounded-full animate-bounce delay-700"></div>
-              <div className="absolute top-4 sm:top-8 lg:top-16 left-4 sm:left-8 lg:left-16 w-1 sm:w-1.5 lg:w-2 h-1 sm:h-1.5 lg:h-2 bg-amber-300/50 rounded-full animate-bounce delay-1000"></div>
+              {/* Milk Pour Effect on Hover - Disabled on mobile for better performance */}
+              {!isMobile && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0 bg-amber-200/70 rounded-b-full transition-all duration-700 hover:h-16 opacity-0 hover:opacity-100"></div>
+              )}
             </div>
-
-            {/* Milk Pour Effect on Hover */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0 bg-amber-200/70 rounded-b-full transition-all duration-700 hover:h-16 opacity-0 hover:opacity-100"></div>
-          </div>
-        ))}
+          )) : (
+            <div className="text-center text-amber-800 p-8">
+              <p>No projects available</p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
