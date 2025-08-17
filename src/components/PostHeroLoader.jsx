@@ -5,61 +5,86 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
   const [isComplete, setIsComplete] = useState(false);
   const [showContent, setShowContent] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
  
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const startTimeRef = useRef(Date.now());
 
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    canvas.width = 500;
-    canvas.height = 500;
+    // Responsive canvas size
+    const canvasSize = isMobile ? 300 : 500;
+    const centerX = canvasSize / 2;
+    const centerY = canvasSize / 2;
+    
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
     const ctx = canvas.getContext('2d');
     ctx.scale(1, 1);
 
     // Updated gradients to match website colors
-    const speedGradient = ctx.createLinearGradient(0, 500, 0, 0);
+    const speedGradient = ctx.createLinearGradient(0, canvasSize, 0, 0);
     speedGradient.addColorStop(0, '#D2691E'); // Chocolate/orange from your website
     speedGradient.addColorStop(1, '#F4A460'); // Sandy brown
 
-    const rpmGradient = ctx.createLinearGradient(0, 500, 0, 0);
+    const rpmGradient = ctx.createLinearGradient(0, canvasSize, 0, 0);
     rpmGradient.addColorStop(0, '#A0522D'); // Sienna brown
     rpmGradient.addColorStop(1, '#CD853F'); // Peru brown
 
     function speedNeedle(rotation) {
-      ctx.lineWidth = 2;
+      ctx.lineWidth = isMobile ? 1.5 : 2;
       ctx.save();
-      ctx.translate(250, 250);
+      ctx.translate(centerX, centerY);
       ctx.rotate(rotation);
-      ctx.strokeRect(-130 / 2 + 170, -1 / 2, 135, 1);
+      const needleLength = isMobile ? 80 : 135;
+      const needleOffset = isMobile ? 100 : 170;
+      ctx.strokeRect(-needleLength / 2 + needleOffset, -1 / 2, needleLength, 1);
       ctx.restore();
     }
 
     function rpmNeedle(rotation) {
-      ctx.lineWidth = 2;
+      ctx.lineWidth = isMobile ? 1.5 : 2;
       ctx.save();
-      ctx.translate(250, 250);
+      ctx.translate(centerX, centerY);
       ctx.rotate(rotation);
-      ctx.strokeRect(-130 / 2 + 170, -1 / 2, 135, 1);
+      const needleLength = isMobile ? 80 : 135;
+      const needleOffset = isMobile ? 100 : 170;
+      ctx.strokeRect(-needleLength / 2 + needleOffset, -1 / 2, needleLength, 1);
       ctx.restore();
     }
 
     function drawMiniNeedle(rotation, width, speed) {
       ctx.lineWidth = width;
       ctx.save();
-      ctx.translate(250, 250);
+      ctx.translate(centerX, centerY);
       ctx.rotate(rotation);
       ctx.strokeStyle = "#8B4513"; // Saddle brown for needles
       ctx.fillStyle = "#8B4513";
-      ctx.strokeRect(-20 / 2 + 220, -1 / 2, 20, 1);
+      const needleLength = isMobile ? 15 : 20;
+      const needleDistance = isMobile ? 120 : 220;
+      ctx.strokeRect(-needleLength / 2 + needleDistance, -1 / 2, needleLength, 1);
       ctx.restore();
 
-      let x = (250 + 180 * Math.cos(rotation));
-      let y = (250 + 180 * Math.sin(rotation));
+      let x = (centerX + (isMobile ? 120 : 180) * Math.cos(rotation));
+      let y = (centerY + (isMobile ? 120 : 180) * Math.sin(rotation));
 
-      ctx.font = "700 20px Arial";
+      ctx.font = isMobile ? "600 16px Arial" : "700 20px Arial";
       ctx.fillStyle = "#F5DEB3"; // Wheat color for text
       ctx.fillText(speed, x, y);
     }
@@ -78,9 +103,7 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
 
     // New function to draw circular speed display
     function drawCircularSpeedDisplay(speed) {
-      const centerX = 250;
-      const centerY = 250;
-      const radius = 80;
+      const radius = isMobile ? 50 : 80;
 
       // Draw outer circle with gradient
       const circleGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
@@ -96,28 +119,28 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
       // Draw border
       ctx.beginPath();
       ctx.strokeStyle = "#D2691E";
-      ctx.lineWidth = 3;
+      ctx.lineWidth = isMobile ? 2 : 3;
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
       ctx.stroke();
 
       // Draw inner highlight circle
       ctx.beginPath();
       ctx.strokeStyle = "rgba(245, 222, 179, 0.3)";
-      ctx.lineWidth = 2;
-      ctx.arc(centerX, centerY, radius - 10, 0, 2 * Math.PI);
+      ctx.lineWidth = isMobile ? 1.5 : 2;
+      ctx.arc(centerX, centerY, radius - (isMobile ? 8 : 10), 0, 2 * Math.PI);
       ctx.stroke();
 
       // Speed text
-      ctx.font = "700 48px Arial";
+      ctx.font = isMobile ? "700 32px Arial" : "700 48px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#F5DEB3"; // Wheat color for main text
-      ctx.fillText(speed, centerX, centerY - 8);
+      ctx.fillText(speed, centerX, centerY - (isMobile ? 6 : 8));
 
       // "mph" text
-      ctx.font = "700 14px Arial";
+      ctx.font = isMobile ? "700 12px Arial" : "700 14px Arial";
       ctx.fillStyle = "#DEB887"; // Burlywood
-      ctx.fillText("mph", centerX, centerY + 25);
+      ctx.fillText("mph", centerX, centerY + (isMobile ? 18 : 25));
     }
 
     function drawSpeedo(speed, gear, rpm, topSpeed) {
@@ -126,50 +149,50 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
       speed = Math.floor(speed);
       rpm = rpm * 10;
 
-      ctx.clearRect(0, 0, 500, 500);
+      ctx.clearRect(0, 0, canvasSize, canvasSize);
 
       // Main circle background - updated to match website colors
       ctx.beginPath();
       ctx.fillStyle = 'rgba(139, 69, 19, 0.9)'; // Saddle brown with transparency
-      ctx.arc(250, 250, 240, 0, 2 * Math.PI);
+      ctx.arc(centerX, centerY, canvasSize * 0.48, 0, 2 * Math.PI);
       ctx.fill();
       ctx.strokeStyle = "#D2691E"; // Orange border
-      ctx.lineWidth = 2;
+      ctx.lineWidth = isMobile ? 1.5 : 2;
       ctx.stroke();
 
       // Outer circle
       ctx.beginPath();
       ctx.strokeStyle = "#8B4513"; // Saddle brown
       ctx.lineWidth = 1;
-      ctx.arc(250, 250, 240, 0, 2 * Math.PI);
+      ctx.arc(centerX, centerY, canvasSize * 0.48, 0, 2 * Math.PI);
       ctx.stroke();
 
       // Draw speed markers
       ctx.fillStyle = "#F5DEB3";
       for (var i = 10; i <= Math.ceil(topSpeed / 20) * 20; i += 10) {
-        drawMiniNeedle(calculateSpeedAngle(i / topSpeed, 83.07888, 34.3775) * Math.PI, i % 20 == 0 ? 3 : 1, i % 20 == 0 ? i : '');
+        drawMiniNeedle(calculateSpeedAngle(i / topSpeed, 83.07888, 34.3775) * Math.PI, i % 20 == 0 ? (isMobile ? 2 : 3) : 1, i % 20 == 0 ? i : '');
 
         if (i <= 100) {
-          drawMiniNeedle(calculateRPMAngle(i / 47, 0, 22.9183) * Math.PI, i % 20 == 0 ? 3 : 1, i % 20 == 0 ? i / 10 : '');
+          drawMiniNeedle(calculateRPMAngle(i / 47, 0, 22.9183) * Math.PI, i % 20 == 0 ? (isMobile ? 2 : 3) : 1, i % 20 == 0 ? i / 10 : '');
         }
       }
 
       // Speed arc
       ctx.beginPath();
       ctx.strokeStyle = speedGradient;
-      ctx.lineWidth = 25;
-      ctx.shadowBlur = 20;
+      ctx.lineWidth = isMobile ? 18 : 25;
+      ctx.shadowBlur = isMobile ? 15 : 20;
       ctx.shadowColor = "#D2691E";
-      ctx.arc(250, 250, 228, .6 * Math.PI, calculateSpeedAngle(speed / topSpeed, 83.07888, 34.3775) * Math.PI);
+      ctx.arc(centerX, centerY, canvasSize * 0.456, .6 * Math.PI, calculateSpeedAngle(speed / topSpeed, 83.07888, 34.3775) * Math.PI);
       ctx.stroke();
 
       // RPM arc
       ctx.beginPath();
-      ctx.lineWidth = 25;
+      ctx.lineWidth = isMobile ? 18 : 25;
       ctx.strokeStyle = rpmGradient;
-      ctx.shadowBlur = 20;
+      ctx.shadowBlur = isMobile ? 15 : 20;
       ctx.shadowColor = "#A0522D";
-      ctx.arc(250, 250, 228, .4 * Math.PI, calculateRPMAngle(rpm / 4.7, 0, 22.9183) * Math.PI, true);
+      ctx.arc(centerX, centerY, canvasSize * 0.456, .4 * Math.PI, calculateRPMAngle(rpm / 4.7, 0, 22.9183) * Math.PI, true);
       ctx.stroke();
       ctx.shadowBlur = 0;
 
@@ -182,34 +205,34 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
       ctx.textBaseline = "alphabetic";
       
       if (gear == 0 && speed > 0) {
-        ctx.font = "700 70px Arial";
-        ctx.fillText('R', 250, 460);
+        ctx.font = isMobile ? "700 50px Arial" : "700 70px Arial";
+        ctx.fillText('R', centerX, canvasSize * 0.92);
         ctx.fillStyle = "#A0522D";
-        ctx.font = "50px Arial";
-        ctx.fillText('N', 290, 460);
+        ctx.font = isMobile ? "40px Arial" : "50px Arial";
+        ctx.fillText('N', centerX + (isMobile ? 30 : 40), canvasSize * 0.92);
       } else if (gear == 0 && speed == 0) {
-        ctx.font = "700 70px Arial";
-        ctx.fillText('N', 250, 460);
+        ctx.font = isMobile ? "700 50px Arial" : "700 70px Arial";
+        ctx.fillText('N', centerX, canvasSize * 0.92);
         ctx.fillStyle = "#A0522D";
-        ctx.font = "700 50px Arial";
-        ctx.fillText('R', 210, 460);
-        ctx.fillText(parseInt(gear) + 1, 290, 460);
+        ctx.font = isMobile ? "700 40px Arial" : "700 50px Arial";
+        ctx.fillText('R', centerX - (isMobile ? 30 : 40), canvasSize * 0.92);
+        ctx.fillText(parseInt(gear) + 1, centerX + (isMobile ? 30 : 40), canvasSize * 0.92);
       } else if (gear - 1 <= 0) {
-        ctx.font = "700 70px Arial";
-        ctx.fillText(gear, 250, 460);
+        ctx.font = isMobile ? "700 50px Arial" : "700 70px Arial";
+        ctx.fillText(gear, centerX, canvasSize * 0.92);
         ctx.fillStyle = "#A0522D";
-        ctx.font = "700 50px Arial";
-        ctx.fillText('R', 210, 460);
-        ctx.font = "700 50px Arial";
-        ctx.fillText(parseInt(gear) + 1, 290, 460);
+        ctx.font = isMobile ? "40px Arial" : "50px Arial";
+        ctx.fillText('R', centerX - (isMobile ? 30 : 40), canvasSize * 0.92);
+        ctx.font = isMobile ? "700 40px Arial" : "700 50px Arial";
+        ctx.fillText(parseInt(gear) + 1, centerX + (isMobile ? 30 : 40), canvasSize * 0.92);
       } else {
-        ctx.font = "700 70px Arial";
-        ctx.fillText(gear, 250, 460);
+        ctx.font = isMobile ? "700 50px Arial" : "700 70px Arial";
+        ctx.fillText(gear, centerX, canvasSize * 0.92);
         ctx.fillStyle = "#A0522D";
-        ctx.font = "700 50px Arial";
-        ctx.fillText(gear - 1, 210, 460);
+        ctx.font = isMobile ? "700 40px Arial" : "700 50px Arial";
+        ctx.fillText(gear - 1, centerX - (isMobile ? 30 : 40), canvasSize * 0.92);
         if (parseInt(gear) + 1 < 7) {
-          ctx.fillText(parseInt(gear) + 1, 290, 460);
+          ctx.fillText(parseInt(gear) + 1, centerX + (isMobile ? 30 : 40), canvasSize * 0.92);
         }
       }
 
@@ -276,7 +299,7 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [onComplete]);
+  }, [onComplete, isMobile]);
 
   if (isComplete && !children) return null;
 
@@ -291,14 +314,18 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
         }}
       >
         {/* Container */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
 
           {/* Title */}
-          <div className="mb-8 text-center">
-            <h1 className="text-4xl font-light text-white mb-2 tracking-wider">
+          <div className={`text-center ${isMobile ? 'mb-4' : 'mb-8'}`}>
+            <h1 className={`font-light text-white mb-2 tracking-wider ${
+              isMobile ? 'text-xl' : 'text-4xl'
+            }`}>
               SURESH SHANMUGASUNDARAM
             </h1>
-            <div className="text-lg text-white/70 uppercase tracking-[0.2em]">
+            <div className={`text-white/70 uppercase tracking-[0.2em] ${
+              isMobile ? 'text-xs' : 'text-lg'
+            }`}>
               Associate Software Developer | Creating modern, functional, and elegant web applications.
             </div>
           </div>
@@ -309,7 +336,9 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
               ref={canvasRef}
               className="drop-shadow-2xl"
               style={{
-                filter: 'drop-shadow(0 0 30px rgba(210, 105, 30, 0.5))'
+                filter: 'drop-shadow(0 0 30px rgba(210, 105, 30, 0.5))',
+                width: isMobile ? '300px' : '500px',
+                height: isMobile ? '300px' : '500px'
               }}
             />
 
@@ -319,7 +348,9 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
                 {[...Array(3)].map((_, i) => (
                   <div
                     key={i}
-                    className="w-3 h-3 rounded-full animate-pulse"
+                    className={`rounded-full animate-pulse ${
+                      isMobile ? 'w-2 h-2' : 'w-3 h-3'
+                    }`}
                     style={{
                       backgroundColor: '#F5DEB3',
                       animationDelay: `${i * 0.3}s`,
@@ -332,8 +363,10 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
           </div>
 
           {/* Status Text */}
-          <div className="mt-8 text-center">
-            <div className="text-white/80 text-sm uppercase tracking-wider">
+          <div className={`text-center ${isMobile ? 'mt-4' : 'mt-8'}`}>
+            <div className={`text-white/80 uppercase tracking-wider ${
+              isMobile ? 'text-xs' : 'text-sm'
+            }`}>
               System Status: Loading
             </div>
           </div>
@@ -346,8 +379,8 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
               key={i}
               className="absolute rounded-full opacity-10 animate-pulse"
               style={{
-                width: `${300 + i * 100}px`,
-                height: `${300 + i * 100}px`,
+                width: isMobile ? `${200 + i * 60}px` : `${300 + i * 100}px`,
+                height: isMobile ? `${200 + i * 60}px` : `${300 + i * 100}px`,
                 background: 'radial-gradient(circle, rgba(245, 222, 179, 0.3) 0%, transparent 70%)',
                 left: `${-10 + i * 20}%`,
                 top: `${-10 + i * 15}%`,
@@ -368,8 +401,10 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
             background: 'linear-gradient(135deg, #F5DEB3 0%, #DEB887 100%)' // Light version of website colors
           }}
         >
-          <div className="relative overflow-hidden">
-            <div className="text-6xl font-light text-center tracking-wide" style={{ color: '#8B4513' }}>
+          <div className="relative overflow-hidden px-4">
+            <div className={`font-light text-center tracking-wide ${
+              isMobile ? 'text-3xl' : 'text-6xl'
+            }`} style={{ color: '#8B4513' }}>
               {children}
             </div>
 
@@ -393,7 +428,10 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
 const PostHeroLoader = ({ onComplete }) => {
   return (
     <TeslaSpeedometer onComplete={onComplete}>
-     {/* <HeroSection onAnimationComplete={onComplete} /> */}
+      <div className="text-center">
+        <h1>WELCOME</h1>
+        <p className="mt-4 normal-case text-lg">Your content is ready</p>
+      </div>
     </TeslaSpeedometer>
   );
 };
