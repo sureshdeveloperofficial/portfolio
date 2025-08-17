@@ -314,12 +314,12 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
         }}
       >
         {/* Container */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+        <div className={`absolute inset-0 flex flex-col items-center justify-center ${isMobile ? 'px-2' : 'px-4'}`}>
 
           {/* Title */}
-          <div className={`text-center ${isMobile ? 'mb-4' : 'mb-8'}`}>
+          <div className={`text-center ${isMobile ? 'mb-3' : 'mb-8'}`}>
             <h1 className={`font-light text-white mb-2 tracking-wider ${
-              isMobile ? 'text-xl' : 'text-4xl'
+              isMobile ? 'text-lg' : 'text-4xl'
             }`}>
               SURESH SHANMUGASUNDARAM
             </h1>
@@ -337,13 +337,15 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
               className="drop-shadow-2xl"
               style={{
                 filter: 'drop-shadow(0 0 30px rgba(210, 105, 30, 0.5))',
-                width: isMobile ? '300px' : '500px',
-                height: isMobile ? '300px' : '500px'
+                width: isMobile ? '280px' : '500px',
+                height: isMobile ? '280px' : '500px',
+                maxWidth: '100vw',
+                maxHeight: '50vh'
               }}
             />
 
             {/* Loading indicator overlay */}
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+            <div className={`absolute ${isMobile ? 'top-2' : 'top-4'} left-1/2 transform -translate-x-1/2`}>
               <div className="flex space-x-2">
                 {[...Array(3)].map((_, i) => (
                   <div
@@ -363,7 +365,7 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
           </div>
 
           {/* Status Text */}
-          <div className={`text-center ${isMobile ? 'mt-4' : 'mt-8'}`}>
+          <div className={`text-center ${isMobile ? 'mt-3' : 'mt-8'}`}>
             <div className={`text-white/80 uppercase tracking-wider ${
               isMobile ? 'text-xs' : 'text-sm'
             }`}>
@@ -379,8 +381,8 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
               key={i}
               className="absolute rounded-full opacity-10 animate-pulse"
               style={{
-                width: isMobile ? `${200 + i * 60}px` : `${300 + i * 100}px`,
-                height: isMobile ? `${200 + i * 60}px` : `${300 + i * 100}px`,
+                width: isMobile ? `${150 + i * 40}px` : `${300 + i * 100}px`,
+                height: isMobile ? `${150 + i * 40}px` : `${300 + i * 100}px`,
                 background: 'radial-gradient(circle, rgba(245, 222, 179, 0.3) 0%, transparent 70%)',
                 left: `${-10 + i * 20}%`,
                 top: `${-10 + i * 15}%`,
@@ -401,9 +403,9 @@ const TeslaSpeedometer = ({ onComplete, children }) => {
             background: 'linear-gradient(135deg, #F5DEB3 0%, #DEB887 100%)' // Light version of website colors
           }}
         >
-          <div className="relative overflow-hidden px-4">
+          <div className={`relative overflow-hidden ${isMobile ? 'px-2' : 'px-4'}`}>
             <div className={`font-light text-center tracking-wide ${
-              isMobile ? 'text-3xl' : 'text-6xl'
+              isMobile ? 'text-2xl' : 'text-6xl'
             }`} style={{ color: '#8B4513' }}>
               {children}
             </div>
