@@ -73,7 +73,7 @@ const HeroSection = ({ onAnimationComplete }) => {
     <section className="bg-amber-700 relative overflow-hidden">
       <div className="hero-container">
         {/* Eagle Animation */}
-        {/* <EagleAnimation /> */}
+        <EagleAnimation />
         
         {/* Circle mask overlay */}
         <div 

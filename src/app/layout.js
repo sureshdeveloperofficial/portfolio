@@ -9,9 +9,44 @@ const antonio = Antonio({
 });
 
 export const metadata = {
-  title: "Portfolio",
-  description: "My Portfolio Website",
+  title: "Suresh Shanmugasundaram | Portfolio",
+  description: "Portfolio of Suresh Shanmugasundaram – showcasing skills, projects, and experience in software development.",
+  keywords: [
+    "Suresh Shanmugasundaram",
+    "Portfolio",
+    "Software Developer",
+    "Full Stack Developer",
+    "Web Development",
+    "React",
+    "Node.js"
+  ],
+  authors: [{ name: "Suresh Shanmugasundaram" }],
+  openGraph: {
+    title: "Suresh Shanmugasundaram | Portfolio",
+    description:
+      "Explore the portfolio of Suresh Shanmugasundaram – projects, skills, and achievements in software development.",
+    url: "https://sureshshanmugasundaram.com",
+    siteName: "Suresh Shanmugasundaram Portfolio",
+    images: [
+      {
+        url: "https://res.cloudinary.com/doii12l1d/image/upload/v1755418579/suresh_logo-transaparent_oq1fux.png",
+        width: 1200,
+        height: 630,
+        alt: "Suresh Shanmugasundaram Portfolio",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Suresh Shanmugasundaram | Portfolio",
+    description:
+      "Check out the portfolio of Suresh Shanmugasundaram – software developer specializing in modern web technologies.",
+    images: ["https://res.cloudinary.com/doii12l1d/image/upload/v1755418579/suresh_logo-transaparent_oq1fux.png"],
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (

@@ -21,7 +21,7 @@ import { useState, Suspense } from "react";
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, useGSAP);
 
 export default function Home() {
-  const [showPostHeroLoader, setShowPostHeroLoader] = useState(false);
+  const [showPostHeroLoader, setShowPostHeroLoader] = useState(true);
   const [heroAnimationComplete, setHeroAnimationComplete] = useState(false);
 
   useGSAP(() => {
@@ -38,13 +38,14 @@ export default function Home() {
     };
   }, []);
 
-      const handleHeroAnimationComplete = () => {
-      setHeroAnimationComplete(true);
-      // Show post-hero loader after hero animation completes
-      setTimeout(() => {
-        setShowPostHeroLoader(true);
-      }, 5000);
-    };
+  const handleHeroAnimationComplete = () => {
+    setHeroAnimationComplete(true);
+    // Show post-hero loader after hero animation completes
+    setTimeout(() => {
+      setShowPostHeroLoader(true);
+    }, 5000);
+   
+  };
 
   const handlePostHeroLoaderComplete = () => {
     setShowPostHeroLoader(false);
@@ -52,44 +53,43 @@ export default function Home() {
 
   return (
     <main>
-      <PostHeroLoader onLoadingComplete={handlePostHeroLoaderComplete} />
-      <MagneticCursor />
-      <NavBar />
-      
-      {/* Post-Hero Loader */}
       {showPostHeroLoader && (
         <PostHeroLoader onComplete={handlePostHeroLoaderComplete} />
       )}
-      
+      <MagneticCursor />
+      <NavBar />
+
       <div id="smooth-wrapper">
         <div id="smooth-content">
-          <HeroSection onAnimationComplete={handleHeroAnimationComplete} />
-          
+        <Suspense fallback={<SuspenseLoader />}>
+         <HeroSection onAnimationComplete={handleHeroAnimationComplete}/>
+         </Suspense>
+
           {/* Wrap other sections in Suspense with custom loader */}
           <Suspense fallback={<SuspenseLoader />}>
             <AboutSection />
           </Suspense>
-          
+
           <Suspense fallback={<SuspenseLoader />}>
             <ExploreMeSection />
           </Suspense>
-          
+
           <Suspense fallback={<SuspenseLoader />}>
             <TextAnimation />
           </Suspense>
-          
+
           <Suspense fallback={<SuspenseLoader />}>
             <SmoothSkillsAnimation />
           </Suspense>
-          
+
           <Suspense fallback={<SuspenseLoader />}>
             <Experience />
           </Suspense>
-          
+
           <Suspense fallback={<SuspenseLoader />}>
             <MyProjects />
           </Suspense>
-          
+
           <Suspense fallback={<SuspenseLoader />}>
             <FooterSection />
           </Suspense>
