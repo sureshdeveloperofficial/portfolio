@@ -3,320 +3,260 @@ import React, { useState, useEffect } from 'react';
 const SuspenseLoader = ({ onLoadingComplete }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [statusIndex, setStatusIndex] = useState(0);
+  const [showTagline, setShowTagline] = useState(false);
+
+  const statusMessages = [
+    'Compiling Code...',
+    'Deploying App...',
+    'Optimizing Performance...',
+    'Almost Ready!'
+  ];
 
   useEffect(() => {
-         // Simulate loading time (you can replace this with actual loading logic)
-     const loadingTimer = setTimeout(() => {
-       setShowSplash(true);
-       // After splash animation, hide the loader
-       setTimeout(() => {
-         setIsLoading(false);
-         if (onLoadingComplete) {
-           onLoadingComplete();
-         }
-       }, 500); // Splash duration (reduced from 1000ms)
-     }, 2500); // Loading duration (reduced from 5000ms)
+    // Simulate loading progress
+    const progressInterval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 2;
+      });
+    }, 50);
 
-    return () => clearTimeout(loadingTimer);
+    // Cycle through status messages
+    const statusInterval = setInterval(() => {
+      setStatusIndex(prev => (prev + 1) % statusMessages.length);
+    }, 1500);
+
+    // Show tagline after a delay
+    const taglineTimer = setTimeout(() => {
+      setShowTagline(true);
+    }, 800);
+
+    // Complete loading after progress reaches 100%
+    const loadingTimer = setTimeout(() => {
+      setShowSplash(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        if (onLoadingComplete) {
+          onLoadingComplete();
+        }
+      }, 800);
+    }, 4000);
+
+    return () => {
+      clearInterval(progressInterval);
+      clearInterval(statusInterval);
+      clearTimeout(taglineTimer);
+      clearTimeout(loadingTimer);
+    };
   }, [onLoadingComplete]);
 
   if (!isLoading) {
-    return null; // Hide the loader completely
+    return null;
   }
 
   return (
-    <div className={`relative w-screen h-screen overflow-hidden flex items-center justify-center transition-all duration-1000 ${showSplash ? 'animate-splash-out' : ''}`} style={{ background: 'linear-gradient(135deg, #F5DEB3 0%, #DEB887 50%, #8B4513 100%)' }}>
-      {/* SVG Filter */}
-      <svg className="absolute w-0 h-0 overflow-visible" xmlns="http://www.w3.org/2000/svg" version="1.1">
-        <filter id="blurFilter">
-          <feGaussianBlur stdDeviation="4.5"></feGaussianBlur>
-          <feColorMatrix type="matrix" values="
-                    1 0 0 0 0
-                    0 1 0 0 0
-                    0 0 1 0 0
-                    0 0 0 19 -9"></feColorMatrix>
-        </filter>
-      </svg>
-
-      {/* Background with grid pattern and radial gradient */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(transparent 25%, #3d1a00 60%),
-            repeating-linear-gradient(
-              45deg,
-              rgb(218 165 32 / 8%) 0,
-              rgb(218 165 32 / 8%) 1.9rem,
-              transparent 1.9rem,
-              transparent 2rem
-            ),
-            repeating-linear-gradient(
-              115deg,
-              rgb(218 165 32 / 8%) 0,
-              rgb(218 165 32 / 8%) 1.9rem,
-              transparent 1.9rem,
-              transparent 2rem
-            ),
-            conic-gradient(from 0deg, #8B4513, #3d1a00, #654321, #8B4513)
-          `
-        }}
-      />
-
-      {/* Outer blur overlay */}
-      <div 
-        className="absolute inset-0 z-10"
-        style={{
-          backdropFilter: 'blur(1rem)',
-          maskImage: 'radial-gradient(72vmin 72vmin at center, transparent 50%, #8B4513 70%)'
-        }}
-      />
-
-      {/* Noise overlay */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-50 z-20"
-        style={{
-          background: 'url(https://assets.codepen.io/907471/noise.svg)',
-          mixBlendMode: 'lighten',
-          filter: 'invert(1)'
-        }}
-      />
-
-      {/* Main rings container */}
-      <div 
-        className={`relative transition-all duration-700 ${showSplash ? 'animate-rings-explode' : ''}`}
-        style={{
-          filter: 'url(#blurFilter)',
-          width: '70vmin',
-          aspectRatio: '1',
-          borderRadius: '50%',
-          perspective: '70vmin'
-        }}
-      >
-        {/* Outer rings */}
-        <div 
-          className="absolute inset-0 rounded-full animate-spin-3d-outer"
-          style={{
-            border: '1.8vmin solid transparent',
-            background: `
-              conic-gradient(
-                from 540deg,
-                #DAA520,
-                transparent,
-                #CD853F,
-                #D2691E,
-                #F4A460,
-                transparent,
-                transparent,
-                #DEB887,
-                transparent,
-                #F5DEB3,
-                #D2B48C,
-                #FFEFD5,
-                transparent,
-                transparent,
-                transparent
-              ) border-box
-            `,
-            mask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
-            maskComposite: 'exclude',
-            WebkitMaskComposite: 'xor'
-          }}
-        />
+    <div className={`relative w-screen h-screen overflow-hidden flex flex-col items-center justify-center transition-all duration-1000 ${showSplash ? 'animate-splash-out' : ''}`}>
+      {/* Dynamic Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 animate-gradient-shift" style={{
+          background: 'linear-gradient(-45deg, #f4e4d6, #e8d5c4, #f0d8c8, #e6c8b3, #f2d4c8, #e8d0c0)',
+          backgroundSize: '400% 400%',
+          animation: 'gradientShift 8s ease infinite'
+        }} />
+        <div className="absolute inset-0 bg-amber-900/10" />
         
-        <div 
-          className="absolute inset-0 rounded-full animate-spin-3d-outer-alt"
-          style={{
-            border: '1.8vmin solid transparent',
-            background: `
-              conic-gradient(
-                from 270deg,
-                #DAA520,
-                transparent,
-                #CD853F,
-                #D2691E,
-                #F4A460,
-                transparent,
-                transparent,
-                #DEB887,
-                transparent,
-                #F5DEB3,
-                #D2B48C,
-                #FFEFD5,
-                transparent,
-                transparent,
-                transparent
-              ) border-box
+        {/* Animated Grid Pattern */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              linear-gradient(rgba(139,69,19,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(139,69,19,0.1) 1px, transparent 1px)
             `,
-            mask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
-            maskComposite: 'exclude',
-            WebkitMaskComposite: 'xor'
-          }}
-        />
-
-        {/* Inner rings */}
-        <div className="absolute inset-0">
-          <div 
-            className="absolute inset-0 rounded-full animate-spin-3d-inner"
-            style={{
-              border: '1.8vmin solid transparent',
-              background: `
-                conic-gradient(
-                  from 1080deg,
-                  #DAA520,
-                  transparent,
-                  #CD853F,
-                  #D2691E,
-                  #F4A460,
-                  transparent,
-                  transparent,
-                  #DEB887,
-                  transparent,
-                  #F5DEB3,
-                  #D2B48C,
-                  #FFEFD5,
-                  transparent,
-                  transparent,
-                  transparent
-                ) border-box
-              `,
-              mask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
-              maskComposite: 'exclude',
-              WebkitMaskComposite: 'xor'
-            }}
-          />
-          
-          <div 
-            className="absolute inset-0 rounded-full animate-spin-3d-inner-alt"
-            style={{
-              border: '1.8vmin solid transparent',
-              background: `
-                conic-gradient(
-                  from 810deg,
-                  #DAA520,
-                  transparent,
-                  #CD853F,
-                  #D2691E,
-                  #F4A460,
-                  transparent,
-                  transparent,
-                  #DEB887,
-                  transparent,
-                  #F5DEB3,
-                  #D2B48C,
-                  #FFEFD5,
-                  transparent,
-                  transparent,
-                  transparent
-                ) border-box
-              `,
-              mask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
-              maskComposite: 'exclude',
-              WebkitMaskComposite: 'xor'
-            }}
-          />
-
-          {/* Logo in center */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center opacity-70"
-            style={{
-              filter: 'drop-shadow(0 0 1.5rem hsla(30deg, 60%, 60%, 0.8))',
-              backgroundImage: 'url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNDAuNTgxIiBoZWlnaHQ9IjU3Ljg0NiIgdmlld0JveD0iMCAwIDQwLjU4MSA1Ny44NDYiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJsaW5lYXItZ3JhZGllbnQiIHgxPSIwLjkxMSIgeTE9IjAuMDgyIiB4Mj0iMC4xODUiIHkyPSIwLjkxIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0RBQTUyMCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjAuMTA3IiBzdG9wLWNvbG9yPSIjRjRBNDYwIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMC40NDMiIHN0b3AtY29sb3I9IiNERUI4ODciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjU3NiIgc3RvcC1jb2xvcj0iI0ZGRUZENSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNDRDg1M0YiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxwYXRoIGlkPSJQYXRoXzEiIGRhdGEtbmFtZT0iUGF0aCAxIiBkPSJNOTMzLjYxMyw2OTkuNDkybC0zMS40NTMsMzEuODVoMjAuMzA4bC0xOC43OCwyNiwzOS4wNTMtMzQuNzk1SDkyMS4wN1oiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC05MDIuMTU5IC02OTkuNDkyKSIgZmlsbD0idXJsKCNsaW5lYXItZ3JhZGllbnQpIi8+Cjwvc3ZnPgoK")',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center center',
-              backgroundSize: 'calc(70vmin / 1.5)'
-            }}
-          />
+            backgroundSize: '50px 50px',
+            animation: 'gridMove 20s linear infinite'
+          }} />
         </div>
       </div>
 
+      {/* Main Content Container */}
+      <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
+        {/* Developer Name and Title */}
+        <div className={`mb-12 transition-all duration-1000 ${showSplash ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'}`}>
+          <h1 className="text-5xl md:text-7xl font-bold text-amber-900 mb-4 tracking-tight">
+            <span className="bg-gradient-to-r from-amber-800 via-amber-700 to-amber-600 bg-clip-text text-transparent">
+              SURESH SHANMUGASUNDARAM
+            </span>
+          </h1>
+          <p className="text-xl md:text-2xl text-amber-800 font-light">
+            ASSOCIATE SOFTWARE DEVELOPER
+          </p>
+        </div>
+
+        {/* Futuristic Progress Indicator */}
+        <div className={`mb-12 transition-all duration-1000 ${showSplash ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+          <div className="relative w-64 h-64 mx-auto">
+            {/* Outer Ring */}
+            <div className="absolute inset-0 rounded-full border-4 border-amber-700/50">
+              <div 
+                className="absolute inset-0 rounded-full border-4 border-transparent border-t-amber-600 border-r-amber-500 border-b-amber-400 border-l-amber-300 animate-spin-slow"
+                style={{
+                  background: 'conic-gradient(from 0deg, #d97706, #f59e0b, #fbbf24, #fcd34d, #d97706)',
+                  mask: 'radial-gradient(farthest-side, transparent 70%, #000 71%)',
+                  WebkitMask: 'radial-gradient(farthest-side, transparent 70%, #000 71%)'
+                }}
+              />
+            </div>
+
+            {/* Progress Ring */}
+            <div className="absolute inset-4 rounded-full border-4 border-amber-600/30">
+              <div 
+                className="absolute inset-0 rounded-full border-4 border-transparent border-t-amber-500"
+                style={{
+                  background: `conic-gradient(from -90deg, #f59e0b ${progress * 3.6}deg, transparent ${progress * 3.6}deg)`,
+                  mask: 'radial-gradient(farthest-side, transparent 70%, #000 71%)',
+                  WebkitMask: 'radial-gradient(farthest-side, transparent 70%, #000 71%)'
+                }}
+              />
+            </div>
+
+            {/* Center Content */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="text-4xl font-bold text-amber-900 mb-2">{progress}%</div>
+              <div className="text-sm text-amber-700">LOADING</div>
+            </div>
+
+            {/* Rotating Gears */}
+            <div className="absolute -top-8 -left-8 w-16 h-16 animate-spin-slow">
+              <div className="w-full h-full rounded-full border-2 border-amber-600/60 flex items-center justify-center">
+                <div className="w-2 h-2 bg-amber-600 rounded-full" />
+              </div>
+            </div>
+            <div className="absolute -top-8 -right-8 w-12 h-12 animate-spin-slow-reverse">
+              <div className="w-full h-full rounded-full border-2 border-amber-500/60 flex items-center justify-center">
+                <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
+              </div>
+            </div>
+            <div className="absolute -bottom-8 -left-8 w-14 h-14 animate-spin-slow">
+              <div className="w-full h-full rounded-full border-2 border-amber-400/60 flex items-center justify-center">
+                <div className="w-1.5 h-1.5 bg-amber-400 rounded-full" />
+              </div>
+            </div>
+            <div className="absolute -bottom-8 -right-8 w-10 h-10 animate-spin-slow-reverse">
+              <div className="w-full h-full rounded-full border-2 border-amber-300/60 flex items-center justify-center">
+                <div className="w-1 h-1 bg-amber-300 rounded-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tagline with Typewriter Effect */}
+        <div className={`mb-8 transition-all duration-1000 ${showTagline ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <p className="text-lg md:text-xl text-amber-800 font-light">
+            <span className="typewriter-text">
+              Building modern, functional, and elegant applications...
+            </span>
+          </p>
+        </div>
+
+        {/* Interactive Status Message */}
+        <div className={`transition-all duration-500 ${showSplash ? 'opacity-0' : 'opacity-100'}`}>
+          <div className="inline-flex items-center space-x-2 px-6 py-3 bg-amber-50/80 backdrop-blur-sm rounded-full border border-amber-200/40">
+            <div className="w-2 h-2 bg-amber-600 rounded-full animate-pulse" />
+            <span className="text-sm text-amber-900 font-mono">
+              {statusMessages[statusIndex]}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-amber-600/40 rounded-full animate-float"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${3 + Math.random() * 4}s`
+            }}
+          />
+        ))}
+      </div>
+
       <style jsx>{`
-        @keyframes spin-3d-outer {
-          0% {
-            transform: rotateY(180deg) rotateX(180deg) rotateZ(180deg) scale(1);
-          }
-          50% {
-            transform: rotateY(270deg) rotateX(270deg) rotateZ(270deg) scale(1.2);
-          }
-          70% {
-            transform: rotateY(360deg) rotateX(360deg) rotateZ(360deg) scale(1);
-          }
-          80% {
-            transform: rotateY(450deg) rotateX(450deg) rotateZ(450deg) scale(1.2);
-          }
-          100% {
-            transform: rotateY(540deg) rotateX(540deg) rotateZ(540deg) scale(1);
-          }
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
         }
 
-        @keyframes spin-3d-outer-alt {
-          0% {
-            transform: rotateY(90deg) rotateX(90deg) rotateZ(90deg) scale(1);
-          }
-          50% {
-            transform: rotateY(180deg) rotateX(180deg) rotateZ(180deg) scale(1.2);
-          }
-          70% {
-            transform: rotateY(270deg) rotateX(270deg) rotateZ(270deg) scale(1);
-          }
-          80% {
-            transform: rotateY(360deg) rotateX(360deg) rotateZ(360deg) scale(1.2);
-          }
-          100% {
-            transform: rotateY(450deg) rotateX(450deg) rotateZ(450deg) scale(1);
-          }
+        @keyframes gridMove {
+          0% { transform: translate(0, 0); }
+          100% { transform: translate(50px, 50px); }
         }
 
-        @keyframes spin-3d-inner {
-          0% {
-            transform: rotateY(360deg) rotateX(360deg) rotateZ(360deg) scale(1);
-          }
-          50% {
-            transform: rotateY(450deg) rotateX(450deg) rotateZ(450deg) scale(1.2);
-          }
-          70% {
-            transform: rotateY(540deg) rotateX(540deg) rotateZ(540deg) scale(1);
-          }
-          80% {
-            transform: rotateY(630deg) rotateX(630deg) rotateZ(630deg) scale(1.2);
-          }
-          100% {
-            transform: rotateY(720deg) rotateX(720deg) rotateZ(720deg) scale(1);
-          }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
 
-        @keyframes spin-3d-inner-alt {
-          0% {
-            transform: rotateY(270deg) rotateX(270deg) rotateZ(270deg) scale(1);
-          }
-          50% {
-            transform: rotateY(360deg) rotateX(360deg) rotateZ(360deg) scale(1.2);
-          }
-          70% {
-            transform: rotateY(450deg) rotateX(450deg) rotateZ(450deg) scale(1);
-          }
-          80% {
-            transform: rotateY(540deg) rotateX(540deg) rotateZ(540deg) scale(1.2);
-          }
-          100% {
-            transform: rotateY(630deg) rotateX(630deg) rotateZ(630deg) scale(1);
-          }
+        @keyframes spin-slow-reverse {
+          from { transform: rotate(360deg); }
+          to { transform: rotate(0deg); }
         }
 
-        .animate-spin-3d-outer {
-          animation: spin-3d-outer 7s ease-in-out infinite;
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.4; }
+          50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
         }
 
-        .animate-spin-3d-outer-alt {
-          animation: spin-3d-outer-alt 7s ease-in-out infinite;
+        .animate-gradient-shift {
+          animation: gradientShift 8s ease infinite;
         }
 
-        .animate-spin-3d-inner {
-          animation: spin-3d-inner 7s ease-in-out infinite;
+        .animate-spin-slow {
+          animation: spin-slow 8s linear infinite;
         }
 
-        .animate-spin-3d-inner-alt {
-          animation: spin-3d-inner-alt 7s ease-in-out infinite;
+        .animate-spin-slow-reverse {
+          animation: spin-slow-reverse 6s linear infinite;
+        }
+
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+
+        .typewriter-text {
+          overflow: hidden;
+          border-right: 2px solid #d97706;
+          white-space: nowrap;
+          animation: typewriter 3s steps(40) 1s forwards, blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typewriter {
+          from { width: 0; }
+          to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+          from, to { border-color: transparent; }
+          50% { border-color: #d97706; }
+        }
+
+        .animate-splash-out {
+          animation: splashOut 0.8s ease-in-out forwards;
+        }
+
+        @keyframes splashOut {
+          0% { opacity: 1; transform: scale(1); }
+          100% { opacity: 0; transform: scale(1.1); }
         }
       `}</style>
     </div>

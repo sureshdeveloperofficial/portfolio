@@ -300,6 +300,213 @@ const Experience = () => {
 
     if (!container || !path) return;
 
+    // Check if device is mobile
+    let isMobile = window.innerWidth <= 768;
+    
+    // Handle resize and orientation changes
+    const handleResize = () => {
+      isMobile = window.innerWidth <= 768;
+      
+      // Kill all existing ScrollTriggers
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      
+      // Reinitialize animations based on new screen size
+      initializeAnimations();
+    };
+    
+    const initializeAnimations = () => {
+      // Set initial path styles
+      const pathLength = path.getTotalLength();
+      gsap.set(path, {
+        strokeDasharray: pathLength,
+        strokeDashoffset: pathLength
+      });
+
+      // Create main timeline for path animation (only on desktop)
+      if (!isMobile) {
+        const pathTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: "top 80%",
+            end: "bottom 20%",
+            scrub: 1,
+            onUpdate: (self) => {
+              const progress = self.progress;
+              const offset = pathLength - (pathLength * progress);
+              gsap.set(path, { strokeDashoffset: offset });
+              
+              // Update progress indicator
+              const progressElement = document.querySelector('.timeline-progress');
+              if (progressElement) {
+                progressElement.textContent = `${Math.round(progress * 100)}%`;
+              }
+            }
+          }
+        });
+      }
+
+      // Animate each timeline item
+      const items = container.querySelectorAll('.timeline-item');
+      items.forEach((item, index) => {
+        if (isMobile) {
+          // On mobile, set items to visible state immediately
+          gsap.set(item, {
+            opacity: 1,
+            scale: 1,
+            y: 0
+          });
+          
+          // Simple fade-in animation for mobile
+          gsap.fromTo(item, 
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              delay: index * 0.1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: item,
+                start: "top 90%",
+                toggleActions: "play none none reverse"
+              }
+            }
+          );
+        } else {
+          // Desktop animations
+          gsap.set(item, {
+            opacity: 0,
+            scale: 0.7,
+            y: 50
+          });
+
+          gsap.to(item, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "back.out(1.7)",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 90%",
+              end: "top 50%",
+              toggleActions: "play none none reverse"
+            }
+          });
+        }
+
+        // Animate the timeline pin
+        const pin = item.querySelector('.timeline-pin');
+        if (pin) {
+          if (isMobile) {
+            // Simple pin animation for mobile
+            gsap.fromTo(pin,
+              { scale: 0.8, opacity: 0 },
+              {
+                scale: 1,
+                opacity: 1,
+                duration: 0.4,
+                delay: index * 0.1 + 0.2,
+                ease: "power2.out",
+                scrollTrigger: {
+                  trigger: item,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse"
+                }
+              }
+            );
+          } else {
+            // Desktop pin animation
+            gsap.set(pin, { scale: 0, rotation: 180 });
+            gsap.to(pin, {
+              scale: 1,
+              rotation: 0,
+              duration: 0.6,
+              delay: 0.3,
+              ease: "elastic.out(1, 0.75)",
+              scrollTrigger: {
+                trigger: item,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+              }
+            });
+          }
+        }
+
+        // Animate the content card
+        const card = item.querySelector('.timeline-card');
+        if (card) {
+          if (isMobile) {
+            // Simple card animation for mobile
+            gsap.fromTo(card,
+              { opacity: 0, y: 15 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                delay: index * 0.1 + 0.3,
+                ease: "power2.out",
+                scrollTrigger: {
+                  trigger: item,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse"
+                }
+              }
+            );
+          } else {
+            // Desktop card animation
+            gsap.set(card, {
+              opacity: 0,
+              y: 30,
+              scale: 0.9
+            });
+            gsap.to(card, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.6,
+              delay: 0.4,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: item,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+              }
+            });
+          }
+        }
+
+        // Animate connecting lines (only on desktop)
+        if (!isMobile) {
+          const connectorLines = item.querySelectorAll('.absolute.top-1\\/2');
+          connectorLines.forEach((line, lineIndex) => {
+            gsap.set(line, {
+              scaleX: 0,
+              transformOrigin: lineIndex === 0 ? "right center" : "left center"
+            });
+            gsap.to(line, {
+              scaleX: 1,
+              duration: 0.5,
+              delay: 0.5,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: item,
+                start: "top 80%",
+                toggleActions: "play none none reverse"
+              }
+            });
+          });
+        }
+      });
+    };
+
+    // Initialize animations
+    initializeAnimations();
+
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+
     // Set initial path styles
     const pathLength = path.getTotalLength();
     gsap.set(path, {
@@ -307,117 +514,188 @@ const Experience = () => {
       strokeDashoffset: pathLength
     });
 
-    // Create main timeline for path animation
-    const pathTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: container,
-        start: "top 80%",
-        end: "bottom 20%",
-        scrub: 1,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          const offset = pathLength - (pathLength * progress);
-          gsap.set(path, { strokeDashoffset: offset });
-          
-          // Update progress indicator
-          const progressElement = document.querySelector('.timeline-progress');
-          if (progressElement) {
-            progressElement.textContent = `${Math.round(progress * 100)}%`;
+    // Create main timeline for path animation (only on desktop)
+    if (!isMobile) {
+      const pathTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top 80%",
+          end: "bottom 20%",
+          scrub: 1,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const offset = pathLength - (pathLength * progress);
+            gsap.set(path, { strokeDashoffset: offset });
+            
+            // Update progress indicator
+            const progressElement = document.querySelector('.timeline-progress');
+            if (progressElement) {
+              progressElement.textContent = `${Math.round(progress * 100)}%`;
+            }
           }
         }
-      }
-    });
+      });
+    }
 
     // Animate each timeline item
     const items = container.querySelectorAll('.timeline-item');
     items.forEach((item, index) => {
-      // Set initial states
-      gsap.set(item, {
-        opacity: 0,
-        scale: 0.7,
-        y: 50
-      });
+      if (isMobile) {
+        // On mobile, set items to visible state immediately
+        gsap.set(item, {
+          opacity: 1,
+          scale: 1,
+          y: 0
+        });
+        
+        // Simple fade-in animation for mobile
+        gsap.fromTo(item, 
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            delay: index * 0.1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 90%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      } else {
+        // Desktop animations
+        gsap.set(item, {
+          opacity: 0,
+          scale: 0.7,
+          y: 50
+        });
 
-      // Animate item appearance
-      gsap.to(item, {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: item,
-          start: "top 90%",
-          end: "top 50%",
-          toggleActions: "play none none reverse"
-        }
-      });
+        gsap.to(item, {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 90%",
+            end: "top 50%",
+            toggleActions: "play none none reverse"
+          }
+        });
+      }
 
       // Animate the timeline pin
       const pin = item.querySelector('.timeline-pin');
       if (pin) {
-        gsap.set(pin, { scale: 0, rotation: 180 });
-        gsap.to(pin, {
-          scale: 1,
-          rotation: 0,
-          duration: 0.6,
-          delay: 0.3,
-          ease: "elastic.out(1, 0.75)",
-          scrollTrigger: {
-            trigger: item,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-          }
-        });
+        if (isMobile) {
+          // Simple pin animation for mobile
+          gsap.fromTo(pin,
+            { scale: 0.8, opacity: 0 },
+            {
+              scale: 1,
+              opacity: 1,
+              duration: 0.4,
+              delay: index * 0.1 + 0.2,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: item,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+              }
+            }
+          );
+        } else {
+          // Desktop pin animation
+          gsap.set(pin, { scale: 0, rotation: 180 });
+          gsap.to(pin, {
+            scale: 1,
+            rotation: 0,
+            duration: 0.6,
+            delay: 0.3,
+            ease: "elastic.out(1, 0.75)",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
+          });
+        }
       }
 
       // Animate the content card
       const card = item.querySelector('.timeline-card');
       if (card) {
-        gsap.set(card, {
-          opacity: 0,
-          y: 30,
-          scale: 0.9
-        });
-        gsap.to(card, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.6,
-          delay: 0.4,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: item,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-          }
-        });
+        if (isMobile) {
+          // Simple card animation for mobile
+          gsap.fromTo(card,
+            { opacity: 0, y: 15 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              delay: index * 0.1 + 0.3,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: item,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+              }
+            }
+          );
+        } else {
+          // Desktop card animation
+          gsap.set(card, {
+            opacity: 0,
+            y: 30,
+            scale: 0.9
+          });
+          gsap.to(card, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            delay: 0.4,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
+          });
+        }
       }
 
-      // Animate connecting lines
-      const connectorLines = item.querySelectorAll('.absolute.top-1\\/2');
-      connectorLines.forEach((line, lineIndex) => {
-        gsap.set(line, {
-          scaleX: 0,
-          transformOrigin: lineIndex === 0 ? "right center" : "left center"
+      // Animate connecting lines (only on desktop)
+      if (!isMobile) {
+        const connectorLines = item.querySelectorAll('.absolute.top-1\\/2');
+        connectorLines.forEach((line, lineIndex) => {
+          gsap.set(line, {
+            scaleX: 0,
+            transformOrigin: lineIndex === 0 ? "right center" : "left center"
+          });
+          gsap.to(line, {
+            scaleX: 1,
+            duration: 0.5,
+            delay: 0.5,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 80%",
+              toggleActions: "play none none reverse"
+            }
+          });
         });
-        gsap.to(line, {
-          scaleX: 1,
-          duration: 0.5,
-          delay: 0.5,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: item,
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        });
-      });
+      }
     });
 
     // Cleanup
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
     };
   }, []);
 
@@ -465,7 +743,7 @@ const Experience = () => {
         </div>
   
         {/* Timeline Container */}
-        <div ref={containerRef} className="relative py-20 min-h-screen">
+        <div ref={containerRef} className="timeline-container relative py-20 min-h-screen">
           {/* Progress Indicator */}
           <div className="absolute top-4 right-4 z-20 bg-amber-100/80 backdrop-blur-sm rounded-full px-4 py-2 text-sm text-amber-800 font-medium">
             <span className="timeline-progress">0%</span> Complete
@@ -555,14 +833,14 @@ const Experience = () => {
                             </div>
                           </div>
 
-                          <p className="text-amber-800 text-sm leading-relaxed mb-4">
+                          <div className="text-amber-800 text-sm leading-relaxed mb-4">
                             {exp.description.map((desc, descIndex) => (
                               <div key={descIndex} className="flex items-start mb-2">
-                                <span className="text-amber-600 mr-2 mt-1">•</span>
-                                <span>{desc}</span>
+                                <span className="text-amber-600 mr-2 flex-shrink-0 mt-0.5">•</span>
+                                <span className="flex-1">{desc}</span>
                               </div>
                             ))}
-                          </p>
+                          </div>
 
                           {/* Technology Icons */}
                           <div className="mb-4">
@@ -630,14 +908,14 @@ const Experience = () => {
                             </div>
                           </div>
 
-                          <p className="text-amber-800 text-sm leading-relaxed mb-4">
+                          <div className="text-amber-800 text-sm leading-relaxed mb-4">
                             {exp.description.map((desc, descIndex) => (
                               <div key={descIndex} className="flex items-start mb-2">
-                                <span className="text-amber-600 mr-2 mt-1">•</span>
-                                <span>{desc}</span>
+                                <span className="text-amber-600 mr-2 flex-shrink-0 mt-0.5">•</span>
+                                <span className="flex-1">{desc}</span>
                               </div>
                             ))}
-                          </p>
+                          </div>
 
                           {/* Technology Icons */}
                           <div className="mb-4">
@@ -712,7 +990,7 @@ const Experience = () => {
         </div>
       </div>
 
-      {/* Custom CSS for animations */}
+              {/* Custom CSS for animations */}
       <style jsx>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
@@ -722,11 +1000,87 @@ const Experience = () => {
           animation: float 3s ease-in-out infinite;
         }
         
-        /* Responsive adjustments for container-based layout */
+                 /* Ensure bullet points are always visible */
+         .timeline-card .flex.items-start span:first-child {
+           opacity: 1 !important;
+           transform: none !important;
+           display: inline !important;
+           color: #d97706 !important;
+         }
+         
+         /* Global bullet point styling */
+         .timeline-card .text-amber-600 {
+           opacity: 1 !important;
+           transform: none !important;
+           display: inline !important;
+           color: #d97706 !important;
+           font-weight: bold !important;
+         }
+         
+         /* Force all bullet points to be visible */
+         .timeline-card span:first-child {
+           opacity: 1 !important;
+           transform: none !important;
+           display: inline !important;
+           color: #d97706 !important;
+           font-weight: bold !important;
+         }
+         
+         /* Ensure bullet points in description lists are always visible */
+         .timeline-card .text-amber-800 .flex span:first-child {
+           opacity: 1 !important;
+           transform: none !important;
+           display: inline !important;
+           color: #d97706 !important;
+           font-weight: bold !important;
+         }
+         
+         /* Target bullet points in flex containers */
+         .timeline-card .flex.items-start span:first-child {
+           opacity: 1 !important;
+           transform: none !important;
+           display: inline !important;
+           color: #d97706 !important;
+           font-weight: bold !important;
+         }
+         
+                 /* Universal bullet point visibility */
+        .timeline-card .flex span:first-child,
+        .timeline-card .text-amber-600,
+        .timeline-card .flex.items-start.mb-2 span:first-child {
+          opacity: 1 !important;
+          transform: none !important;
+          display: inline !important;
+          color: #d97706 !important;
+          font-weight: bold !important;
+          visibility: visible !important;
+        }
+        
+        /* Global bullet point layout improvements */
+        .timeline-card .flex.items-start.mb-2 {
+          align-items: flex-start !important;
+          gap: 0.5rem !important;
+        }
+        
+        .timeline-card .flex.items-start.mb-2 span:first-child {
+          flex-shrink: 0 !important;
+          margin-top: 0.125rem !important;
+          line-height: 1.2 !important;
+          min-width: 0.5rem !important;
+        }
+        
+        .timeline-card .flex.items-start.mb-2 span:last-child {
+          flex: 1 !important;
+          line-height: 1.4 !important;
+          word-wrap: break-word !important;
+          overflow-wrap: break-word !important;
+        }
+        
+                 /* Mobile responsive timeline layout */
         @media (max-width: 768px) {
           .timeline-item .flex {
             flex-direction: column !important;
-            gap: 2rem !important;
+            gap: 1.5rem !important;
           }
           
           .timeline-item .flex > div {
@@ -737,23 +1091,190 @@ const Experience = () => {
           .timeline-pin {
             order: 1 !important;
             margin: 1rem 0 !important;
+            width: 3rem !important;
+            height: 3rem !important;
           }
           
           .timeline-card {
             order: 2 !important;
             width: 100% !important;
             max-width: 100% !important;
+            margin: 0 1rem !important;
+          }
+          
+          /* Adjust SVG path for mobile */
+          .timeline-container svg {
+            display: none;
+          }
+          
+          /* Mobile-specific animations - only for main containers */
+          .timeline-item {
+            opacity: 1 !important;
+            transform: none !important;
+          }
+          
+          .timeline-card {
+            opacity: 1 !important;
+            transform: none !important;
+          }
+          
+          .timeline-pin {
+            opacity: 1 !important;
+            transform: none !important;
+          }
+          
+          /* Ensure bullet points and text content are visible on mobile */
+          .timeline-card span {
+            opacity: 1 !important;
+            transform: none !important;
+            display: inline !important;
+          }
+          
+          .timeline-card .flex {
+            opacity: 1 !important;
+            transform: none !important;
+          }
+          
+          .timeline-card .flex span {
+            opacity: 1 !important;
+            transform: none !important;
+            display: inline !important;
+          }
+          
+          /* Ensure all text elements in cards are visible */
+          .timeline-card p,
+          .timeline-card h3,
+          .timeline-card div {
+            opacity: 1 !important;
+            transform: none !important;
+          }
+          
+          /* Mobile-specific bullet point alignment */
+          .timeline-card .flex.items-start.mb-2 {
+            align-items: flex-start !important;
+            gap: 0.5rem !important;
+          }
+          
+          .timeline-card .flex.items-start.mb-2 span:first-child {
+            flex-shrink: 0 !important;
+            margin-top: 0.125rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          .timeline-card .flex.items-start.mb-2 span:last-child {
+            flex: 1 !important;
+            line-height: 1.4 !important;
+            word-wrap: break-word !important;
+          }
+          
+                     /* Force bullet points to be visible */
+           .timeline-card .flex.items-start .text-amber-600 {
+             opacity: 1 !important;
+             transform: none !important;
+             display: inline !important;
+             color: #d97706 !important;
+             font-weight: bold !important;
+           }
+           
+           /* Ensure bullet points in description lists are visible */
+           .timeline-card .text-amber-800 .flex span:first-child {
+             opacity: 1 !important;
+             transform: none !important;
+             display: inline !important;
+             color: #d97706 !important;
+             font-weight: bold !important;
+           }
+           
+           /* Target bullet points more specifically */
+           .timeline-card .flex.items-start.mb-2 span:first-child {
+             opacity: 1 !important;
+             transform: none !important;
+             display: inline !important;
+             color: #d97706 !important;
+             font-weight: bold !important;
+           }
+           
+           /* Comprehensive bullet point visibility for mobile */
+           .timeline-card .flex.items-start span:first-child,
+           .timeline-card .flex.items-start .text-amber-600,
+           .timeline-card .text-amber-800 .flex span:first-child,
+           .timeline-card .flex.mb-2 span:first-child {
+             opacity: 1 !important;
+             transform: none !important;
+             display: inline !important;
+             color: #d97706 !important;
+             font-weight: bold !important;
+             visibility: visible !important;
+           }
+           
+           /* Ensure bullet points are not hidden by any means */
+           .timeline-card * span:first-child {
+             opacity: 1 !important;
+             transform: none !important;
+             display: inline !important;
+             color: #d97706 !important;
+             font-weight: bold !important;
+             visibility: visible !important;
+           }
+          
+          /* Ensure description text is visible */
+          .timeline-card .text-amber-800 {
+            opacity: 1 !important;
+            transform: none !important;
+          }
+          
+          /* Optimize mobile performance */
+          .timeline-item * {
+            will-change: auto !important;
+          }
+          
+          /* Ensure proper spacing on mobile */
+          .timeline-item {
+            margin-bottom: 2rem !important;
+          }
+          
+          /* Hide complex animations on mobile */
+          .animate-float {
+            display: none !important;
           }
         }
         
         @media (max-width: 480px) {
           .timeline-card {
             padding: 1rem !important;
+            margin: 0 0.5rem !important;
           }
           
           .timeline-pin {
-            width: 16px !important;
-            height: 16px !important;
+            width: 2.5rem !important;
+            height: 2.5rem !important;
+          }
+          
+          .timeline-item .flex {
+            gap: 1rem !important;
+          }
+          
+          /* Hide progress indicator on very small screens */
+          .timeline-progress {
+            display: none;
+          }
+        }
+        
+        /* Ensure animations work properly on all screen sizes */
+        @media (min-width: 769px) {
+          .timeline-item {
+            opacity: 0;
+            transform: scale(0.7) translateY(50px);
+          }
+          
+          .timeline-card {
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+          }
+          
+          .timeline-pin {
+            opacity: 0;
+            transform: scale(0) rotate(180deg);
           }
         }
       `}</style>

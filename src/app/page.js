@@ -54,7 +54,7 @@ export default function Home() {
   return (
     <main>
       {showPostHeroLoader && (
-        <PostHeroLoader onComplete={handlePostHeroLoaderComplete} />
+        <SuspenseLoader onComplete={handlePostHeroLoaderComplete} />
       )}
       <MagneticCursor />
       <NavBar />
