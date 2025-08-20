@@ -12,51 +12,59 @@ import {
   SiGreensock,
   SiNodedotjs,
   SiFirebase,
+  SiGit,
+  SiNextdotjs,
+  SiThreedotjs,
+  SiMysql,
+  SiPrisma,
+  SiFramer,
+  SiExpress
 } from "react-icons/si";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const defaultProjects = [
   {
-    image: "/images/p1.png",
-    title: "Interactive Landing Page",
+    image: "/images/projects/project1.png",
+    title: "Portfolio Website",
     category: "Frontend",
     description:
-      "A highly-animated landing experience using GSAP timelines, ScrollTrigger scenes, and smooth parallax effects.",
-    tech: [SiReact, SiVite, SiTailwindcss, SiGreensock],
-    demo: "#",
-    github: "#",
-  },
+      "An interactive portfolio website featuring smooth animations, dynamic scroll effects, and engaging 3D elements. Built with Next.js and styled using Tailwind CSS, the site leverages GSAP for timeline-based animations, ScrollTrigger for seamless transitions, and Three.js for immersive 3D visuals. The result is a highly-polished, modern landing experience optimized for performance and user engagement.",
+    tech: [SiNextdotjs, SiThreedotjs, SiTailwindcss, SiGit, SiGithub],
+    demo: "https://suresh-shanmugasundaram-portfolio.vercel.app/",
+    // github: "#",
+  },  
   {
-    image: "/images/p2.png",
-    title: "Portfolio Grid",
-    category: "UI",
+    image: "/images/projects/project2.png",
+    title: "Online House Planners Website",
+    category: "Frontend",
     description:
-      "Responsive project grid with hover tilt, staggered entrances, and accessible keyboard focus states.",
-    tech: [SiReact, SiTailwindcss, SiGithub],
-    demo: "#",
-    github: "#",
-  },
+      "A responsive web platform designed for exploring and showcasing house planning concepts. The interface features an interactive project grid with smooth hover tilt effects, staggered entrance animations, and full keyboard accessibility for an inclusive user experience. Built with React and styled using Tailwind CSS, the project emphasizes both modern UI design and accessibility best practices.",
+    tech: [SiReact,SiThreedotjs, SiTailwindcss, SiGit, SiGithub],
+    demo: "https://onlinehouseplan.vercel.app/",
+    // github: "#",
+  },  
   {
-    image: "/images/p3.png",
-    title: "Realtime Dashboard",
+    image: "/images/projects/project3.png",
+    title: "Practo Patient Dashboard",
     category: "Fullstack",
     description:
-      "Realtime KPI dashboard backed by Firebase with smooth transitions and shared element animations.",
-    tech: [SiReact, SiTailwindcss, SiFirebase],
-    demo: "#",
-    github: "#",
-  },
+    "An interactive personal portfolio built with Next.js, featuring smooth GSAP animations, ScrollTrigger effects, and immersive Three.js 3D visuals. Styled with Tailwind CSS, the site delivers a modern, dynamic showcase of projects and skills with a focus on performance and user engagement. It serves as a creative space to highlight technical expertise while providing an engaging browsing experience.",  
+    tech: [SiReact, SiNodedotjs, SiMysql, SiPrisma, SiTailwindcss, SiFramer, SiExpress, SiFirebase],
+    // demo: "#",
+    // github: "#",
+  },  
   {
-    image: "/images/p4.png",
-    title: "Node API Starter",
-    category: "Backend",
+    image: "/images/projects/project4.png",
+    title: "Practo Doctor Dashboard",
+    category: "Fullstack",
     description:
-      "Opinionated starter API with auth, validation, and DX niceties. Frontend hooks in via React Query.",
-    tech: [SiNodedotjs, SiReact, SiTailwindcss],
-    demo: "#",
-    github: "#",
-  },
+      "A full-stack doctor dashboard inspired by Practo, designed to help healthcare providers manage patients and appointments efficiently. Doctors can view patient details, track upcoming and past appointments, and conduct audio/video consultations directly from the platform. Secure payment integration and real-time syncing with Firebase ensure smooth operations. Built with React, Node.js, Prisma, Express, and Tailwind CSS, the dashboard delivers a modern, responsive, and user-friendly experience tailored for medical professionals.",
+    tech: [SiReact, SiNodedotjs, SiMysql, SiPrisma, SiTailwindcss, SiFramer, SiExpress, SiFirebase],
+    // demo: "#",
+    // github: "#",
+  }
+  
 ];
 
 const MyProjects = ({ projects: incomingProjects }) => {
@@ -293,7 +301,8 @@ const MyProjects = ({ projects: incomingProjects }) => {
                 </ul>
 
                 <div className="flex items-center gap-3 md:gap-4 pt-2">
-                  <a
+               {project.demo ? (
+                 <a
                     href={project.demo}
                     target="_blank"
                     rel="noreferrer noopener"
@@ -302,8 +311,9 @@ const MyProjects = ({ projects: incomingProjects }) => {
                   >
                     Live Demo
                   </a>
-
-                  <a
+): null}
+                  {project.github ? (
+                    <a
                     href={project.github}
                     target="_blank"
                     rel="noreferrer noopener"
@@ -312,6 +322,7 @@ const MyProjects = ({ projects: incomingProjects }) => {
                   >
                     <SiGithub className="size-5" /> GitHub
                   </a>
+                  ): null}
                 </div>
               </div>
             </article>
