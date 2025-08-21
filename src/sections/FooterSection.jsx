@@ -196,6 +196,7 @@ const Scene = ({ mousePosition, onModelLoad, onModelError, useFallback = false, 
 // Animated Contact Form Component
 const ContactForm = () => {
   const formRef = useRef(null);
+  const paperPlaneRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -203,6 +204,7 @@ const ContactForm = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPaperPlane, setShowPaperPlane] = useState(false);
 
   useEffect(() => {
     if (!formRef.current) return;
@@ -285,12 +287,72 @@ const ContactForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Show paper plane
+    setShowPaperPlane(true);
+    
+    // Wait a bit for the plane to appear, then animate
+    setTimeout(() => {
+      if (paperPlaneRef.current) {
+        const tl = gsap.timeline();
+        
+        // Reset to starting position
+        tl.set(paperPlaneRef.current, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          scale: 1,
+          opacity: 1
+        });
+        
+        // Fly in from bottom-left
+        tl.to(paperPlaneRef.current, {
+          x: -80,
+          y: 60,
+          rotation: -20,
+          duration: 0.8,
+          ease: "power2.out"
+        })
+        
+        // Fly up and to the right
+        .to(paperPlaneRef.current, {
+          x: 100,
+          y: -120,
+          rotation: 30,
+          duration: 1.0,
+          ease: "power2.inOut"
+        })
+        
+        // Continue flying with more rotation
+        .to(paperPlaneRef.current, {
+          x: 200,
+          y: -200,
+          rotation: 60,
+          duration: 0.8,
+          ease: "power2.in"
+        })
+        
+        // Final exit with fade out
+        .to(paperPlaneRef.current, {
+          x: 300,
+          y: -300,
+          rotation: 90,
+          opacity: 0,
+          scale: 0.5,
+          duration: 0.6,
+          ease: "power2.in"
+        });
+      }
+    }, 100);
+    
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     // Reset form
     setFormData({ name: '', email: '', service: '', message: '' });
     setIsSubmitting(false);
+    
+    // Hide paper plane
+    setTimeout(() => setShowPaperPlane(false), 1000);
     
     // Success animation
     gsap.to(formRef.current, {
@@ -304,8 +366,45 @@ const ContactForm = () => {
   return (
     <div 
       ref={formRef}
-      className="w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-orange-200"
+      className="relative w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-orange-200"
     >
+      {/* Paper Plane Element */}
+      {showPaperPlane && (
+        <div
+          ref={paperPlaneRef}
+          className="absolute z-50 pointer-events-none"
+          style={{
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="text-orange-500 drop-shadow-lg"
+          >
+            <path
+              d="M22 2L11 13"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M22 2L15 22L11 13L2 9L22 2Z"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      )}
+
       <div className="text-center mb-8">
         <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600 mb-2">
           Contact Us
