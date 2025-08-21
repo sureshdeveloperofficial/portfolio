@@ -205,6 +205,7 @@ const ContactForm = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPaperPlane, setShowPaperPlane] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(''); // 'success', 'error', ''
 
   useEffect(() => {
     if (!formRef.current) return;
@@ -286,6 +287,7 @@ const ContactForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus('');
     
     // Show paper plane
     setShowPaperPlane(true);
@@ -344,23 +346,42 @@ const ContactForm = () => {
       }
     }, 100);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Reset form
-    setFormData({ name: '', email: '', service: '', message: '' });
-    setIsSubmitting(false);
-    
-    // Hide paper plane
-    setTimeout(() => setShowPaperPlane(false), 1000);
-    
-    // Success animation
-    gsap.to(formRef.current, {
-      scale: 1.05,
-      duration: 0.2,
-      yoyo: true,
-      repeat: 1
-    });
+    try {
+      // Send email using Nodemailer API
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setSubmitStatus('success');
+        // Reset form on success
+        setFormData({ name: '', email: '', service: '', message: '' });
+        
+        // Success animation
+        gsap.to(formRef.current, {
+          scale: 1.05,
+          duration: 0.2,
+          yoyo: true,
+          repeat: 1
+        });
+      } else {
+        setSubmitStatus('error');
+        console.error('Email sending failed:', result.error);
+      }
+    } catch (error) {
+      console.error('Email sending error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+      // Hide paper plane
+      setTimeout(() => setShowPaperPlane(false), 1000);
+    }
   };
 
   return (
@@ -411,6 +432,21 @@ const ContactForm = () => {
         </h3>
         <p className="text-gray-600">Let's start building something amazing together!</p>
       </div>
+
+      {/* Status Messages */}
+      {submitStatus === 'success' && (
+        <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-xl">
+          <p className="font-semibold">🎉 Message sent successfully!</p>
+          <p className="text-sm">We'll get back to you within 24 hours.</p>
+        </div>
+      )}
+      
+      {submitStatus === 'error' && (
+        <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl">
+          <p className="font-semibold">❌ Failed to send message</p>
+          <p className="text-sm">Please try again or contact us directly.</p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Name Field */}
@@ -502,7 +538,7 @@ const ContactForm = () => {
       </form>
 
       {/* Success Message */}
-      {!isSubmitting && formData.name === '' && formData.email === '' && (
+      {!isSubmitting && formData.name === '' && formData.email === '' && submitStatus !== 'success' && (
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
             We'll get back to you within 24 hours! 🚀
