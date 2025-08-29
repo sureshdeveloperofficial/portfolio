@@ -5,7 +5,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment, Float, Box } from '@react-three/drei';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Linkedin, Mail, Twitter, Send } from 'lucide-react';
+import { Linkedin, Mail, Twitter, Send, Instagram } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -560,6 +560,7 @@ const FooterSection = () => {
   const footerCardRef = useRef(null);
   const shiningOverlayRef = useRef(null);
   const [isHovered, setIsHovered] = useState(null);
+  const [emailCopied, setEmailCopied] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [modelLoaded, setModelLoaded] = useState(false);
   const [modelError, setModelError] = useState(false);
@@ -705,27 +706,52 @@ const FooterSection = () => {
     }
   };
 
+  const handleEmailClick = async (e) => {
+    e.preventDefault();
+    const email = "sureshdeveloperofficial@gmail.com";
+    
+    try {
+      await navigator.clipboard.writeText(email);
+      setEmailCopied(true);
+      
+      // Reset the copied state after 2 seconds
+      setTimeout(() => {
+        setEmailCopied(false);
+      }, 2000);
+      
+      // Optional: Also open email client
+      window.location.href = `mailto:${email}`;
+    } catch (err) {
+      console.error('Failed to copy email: ', err);
+      // Fallback: just open email client
+      window.location.href = `mailto:${email}`;
+    }
+  };
+
   const socialLinks = [
     { 
       icon: Linkedin, 
-      href: "https://linkedin.com/in/yourprofile", 
+      href: "https://www.linkedin.com/in/suresh-shanmugasundaram-7590ab279/", 
       label: "LinkedIn",
       bgColor: "bg-blue-500",
-      hoverColor: "hover:bg-blue-400"
+      hoverColor: "hover:bg-blue-400",
+      onClick: null
     },
     { 
       icon: Mail, 
-      href: "mailto:your.email@example.com", 
-      label: "Email",
-      bgColor: "bg-red-500",
-      hoverColor: "hover:bg-red-400"
+      href: "#", 
+      label: emailCopied ? "Email Copied!" : "Email",
+      bgColor: emailCopied ? "bg-green-500" : "bg-red-500",
+      hoverColor: emailCopied ? "hover:bg-green-400" : "hover:bg-red-400",
+      onClick: handleEmailClick
     },
     { 
-      icon: Twitter, 
-      href: "https://twitter.com/yourhandle", 
-      label: "Twitter",
+      icon: Instagram, 
+      href: "https://www.instagram.com/suresh.shanmugasundaram/", 
+      label: "Instagram",
       bgColor: "bg-amber-600",
-      hoverColor: "hover:bg-amber-500"
+      hoverColor: "hover:bg-amber-500",
+      onClick: null
     }
   ];
 
@@ -868,39 +894,72 @@ const FooterSection = () => {
              </p>
            </div>
            <div className="flex justify-center lg:justify-start items-center space-x-3 sm:space-x-4 lg:space-x-6 mb-8 sm:mb-12">
-            {socialLinks.map(({ icon: Icon, href, label, bgColor, hoverColor }, index) => (
-                             <a
-                 key={index}
-                 href={href}
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className={`group relative p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl ${bgColor} ${hoverColor} transition-all duration-300 hover:scale-110 hover:rotate-6 shadow-xl sm:shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 cursor-pointer active:scale-95`}
-                 onMouseEnter={() => setIsHovered(index)}
-                 onMouseLeave={() => setIsHovered(null)}
-                 aria-label={label}
-               >
-                 <Icon 
-                   size={24} 
-                   className="sm:w-8 sm:h-8 lg:w-8 lg:h-8 text-white drop-shadow-md" 
-                 />
-                
-                                 {/* Dynamic Tooltip */}
-                 <span 
-                   className={`absolute -top-12 sm:-top-16 left-1/2 transform -translate-x-1/2 px-3 sm:px-4 py-2 bg-black text-white text-xs sm:text-sm font-bold rounded-lg transition-all duration-300 ${
-                     isHovered === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                   }`}
-                 >
-                   {label}
-                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
-                 </span>
-                
-                {/* Glow Effect */}
-                <div 
-                  className={`absolute inset-0 rounded-2xl bg-white/30 blur-xl transition-opacity duration-300 ${
-                    isHovered === index ? 'opacity-100' : 'opacity-0'
-                  }`}
-                />
-              </a>
+            {socialLinks.map(({ icon: Icon, href, label, bgColor, hoverColor, onClick }, index) => (
+              onClick ? (
+                <button
+                  key={index}
+                  onClick={onClick}
+                  className={`group relative p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl ${bgColor} ${hoverColor} transition-all duration-300 hover:scale-110 hover:rotate-6 shadow-xl sm:shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 cursor-pointer active:scale-95`}
+                  onMouseEnter={() => setIsHovered(index)}
+                  onMouseLeave={() => setIsHovered(null)}
+                  aria-label={label}
+                >
+                  <Icon 
+                    size={24} 
+                    className="sm:w-8 sm:h-8 lg:w-8 lg:h-8 text-white drop-shadow-md" 
+                  />
+                  
+                  {/* Dynamic Tooltip */}
+                  <span 
+                    className={`absolute -top-12 sm:-top-16 left-1/2 transform -translate-x-1/2 px-3 sm:px-4 py-2 bg-black text-white text-xs sm:text-sm font-bold rounded-lg transition-all duration-300 ${
+                      isHovered === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                    }`}
+                  >
+                    {label}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+                  </span>
+                  
+                  {/* Glow Effect */}
+                  <div 
+                    className={`absolute inset-0 rounded-2xl bg-white/30 blur-xl transition-opacity duration-300 ${
+                      isHovered === index ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                </button>
+              ) : (
+                <a
+                  key={index}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`group relative p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl ${bgColor} ${hoverColor} transition-all duration-300 hover:scale-110 hover:rotate-6 shadow-xl sm:shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 cursor-pointer active:scale-95`}
+                  onMouseEnter={() => setIsHovered(index)}
+                  onMouseLeave={() => setIsHovered(null)}
+                  aria-label={label}
+                >
+                  <Icon 
+                    size={24} 
+                    className="sm:w-8 sm:h-8 lg:w-8 lg:h-8 text-white drop-shadow-md" 
+                  />
+                  
+                  {/* Dynamic Tooltip */}
+                  <span 
+                    className={`absolute -top-12 sm:-top-16 left-1/2 transform -translate-x-1/2 px-3 sm:px-4 py-2 bg-black text-white text-xs sm:text-sm font-bold rounded-lg transition-all duration-300 ${
+                      isHovered === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                    }`}
+                  >
+                    {label}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+                  </span>
+                  
+                  {/* Glow Effect */}
+                  <div 
+                    className={`absolute inset-0 rounded-2xl bg-white/30 blur-xl transition-opacity duration-300 ${
+                      isHovered === index ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                </a>
+              )
             ))}
           </div>
           
