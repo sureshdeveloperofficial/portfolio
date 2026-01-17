@@ -7,12 +7,10 @@ import gsap from "gsap";
 const ExploreMeSection = () => {
   useGSAP(() => {
     const revealTl = gsap.timeline({
-      delay: 1,
       scrollTrigger: {
         trigger: ".benefit-section",
         start: "top 60%",
-        end: "top top",
-        scrub: 1.5,
+        toggleActions: "play none none none",
       },
     });
 

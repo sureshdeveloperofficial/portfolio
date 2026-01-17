@@ -4,20 +4,20 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import { 
-  FaHtml5, 
-  FaCss3Alt, 
-  FaJs, 
-  FaReact, 
-  FaNodeJs, 
-  FaGithub, 
+import {
+  FaHtml5,
+  FaCss3Alt,
+  FaJs,
+  FaReact,
+  FaNodeJs,
+  FaGithub,
   FaPython,
   FaFigma
 } from 'react-icons/fa';
-import { 
-  SiTailwindcss, 
-  SiMongodb, 
-  SiNextdotjs, 
+import {
+  SiTailwindcss,
+  SiMongodb,
+  SiNextdotjs,
   SiThreedotjs,
   SiFlutter,
   SiPostgresql,
@@ -43,7 +43,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 // ClipPathTitle component (if not imported)
 const ClipPathTitle = ({ title, color, bg, className, borderColor }) => (
-  <h1 
+  <h1
     className={`text-6xl md:text-8xl font-bold ${className}`}
     style={{
       color: color,
@@ -107,7 +107,7 @@ const SmoothSkillsAnimation = () => {
       color: '#000000'
     },
     {
-      name: "Three.js", 
+      name: "Three.js",
       icon: <SiThreedotjs className="w-12 h-12" />,
       color: '#000000'
     },
@@ -135,7 +135,7 @@ const SmoothSkillsAnimation = () => {
       name: "MySQL",
       icon: <SiMysql className="w-12 h-12" />,
       color: '#005782'
-    }, 
+    },
     {
       name: "PostgreSQL",
       icon: <SiPostgresql className="w-12 h-12" />,
@@ -168,7 +168,7 @@ const SmoothSkillsAnimation = () => {
     },
     {
       name: "JWT",
-      icon: <SiJsonwebtokens  className="w-12 h-12" />,
+      icon: <SiJsonwebtokens className="w-12 h-12" />,
       color: '#CF38F7'
     },
     {
@@ -330,11 +330,11 @@ const SmoothSkillsAnimation = () => {
       const secondText = secondTitle.textContent;
 
       // Clear and recreate with spans for character animation
-      firstTitle.innerHTML = firstText.split('').map(char => 
+      firstTitle.innerHTML = firstText.split('').map(char =>
         `<span class="char" style="display: inline-block; opacity: 0; transform: translateY(50px) rotateX(90deg);">${char}</span>`
       ).join('');
 
-      secondTitle.innerHTML = secondText.split('').map(char => 
+      secondTitle.innerHTML = secondText.split('').map(char =>
         `<span class="char" style="display: inline-block; opacity: 0; transform: translateY(50px) rotateX(90deg);">${char}</span>`
       ).join('');
 
@@ -427,7 +427,7 @@ const SmoothSkillsAnimation = () => {
   }, { scope: skillsRef });
 
   return (
-    <div ref={skillsRef} className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 py-20 px-4">
+    <div ref={skillsRef} className="relative min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 py-20 px-4 z-10">
       <div className="max-w-6xl mx-auto">
         {/* Title */}
         <div className="text-center mb-16">
@@ -456,7 +456,7 @@ const SmoothSkillsAnimation = () => {
           {skills.map((skill, index) => (
             <div
               key={skill.name}
-              className="skill-card group relative bg-amber-100/80 backdrop-blur-sm rounded-full p-8 border-2 border-amber-200 hover:border-amber-400 transition-all duration-300 cursor-pointer aspect-square flex flex-col items-center justify-center shadow-lg hover:shadow-2xl"
+              className="skill-card group relative bg-amber-100 backdrop-blur-sm rounded-full p-8 border-2 border-amber-200 hover:border-amber-400 transition-all duration-300 cursor-pointer aspect-square flex flex-col items-center justify-center shadow-lg hover:shadow-2xl"
             >
               {/* Glow effect */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-300/20 to-orange-300/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
@@ -464,7 +464,7 @@ const SmoothSkillsAnimation = () => {
               {/* Content */}
               <div className="relative z-10 text-center">
                 <div className="skill-icon mb-3 flex justify-center">
-                  <div 
+                  <div
                     className="w-16 h-16 flex items-center justify-center"
                     style={{ color: skill.color }}
                   >

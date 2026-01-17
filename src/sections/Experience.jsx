@@ -26,13 +26,13 @@ import {
   Layers
 } from 'lucide-react';
 // Import real tech icons from React Icons
-import { 
-  SiReact, 
-  SiNodedotjs, 
-  SiJavascript, 
-  SiTypescript, 
-  SiMongodb, 
-  SiMysql, 
+import {
+  SiReact,
+  SiNodedotjs,
+  SiJavascript,
+  SiTypescript,
+  SiMongodb,
+  SiMysql,
   SiPostgresql,
   SiDocker,
   SiGit,
@@ -96,7 +96,7 @@ const Experience = () => {
   const pathRef = useRef(null);
   const timelineRef = useRef(null);
   const paragraphRef = useRef(null);
-  
+
   // paragraph text reveal gsap animation
   useGSAP(() => {
     const paragraphSplit = new SplitText(paragraphRef.current, {
@@ -143,7 +143,7 @@ const Experience = () => {
         { name: "Express", icon: <SiExpress className="w-4 h-4" />, color: "text-gray-600" },
         { name: "Three.js", icon: <SiThreedotjs className="w-4 h-4" />, color: "text-black-500" },
         { name: "Firebase", icon: <SiFirebase className="w-4 h-4" />, color: "text-orange-500" },
-        { name: "JWT", icon: <SiJsonwebtokens  className="w-4 h-4" />, color: "text-pink-500" },
+        { name: "JWT", icon: <SiJsonwebtokens className="w-4 h-4" />, color: "text-pink-500" },
         { name: "Google Auth", icon: <FcGoogle className="w-4 h-4" />, color: "text-red-500" },
         { name: "Passport", icon: <SiPassport className="w-4 h-4" />, color: "text-green-500" },
         { name: "Postgres", icon: <SiPostgresql className="w-4 h-4" />, color: "text-blue-500" },
@@ -184,7 +184,7 @@ const Experience = () => {
         { name: "Digital Ocean", icon: <SiDigitalocean className="w-4 h-4" />, color: "text-cyan-500" },
         { name: "Firebase", icon: <SiFirebase className="w-4 h-4" />, color: "text-orange-500" },
         { name: "Razorpay", icon: <SiRazorpay className="w-4 h-4" />, color: "text-blue-500" },
-        { name: "JWT", icon: <SiJsonwebtokens  className="w-4 h-4" />, color: "text-pink-500" },
+        { name: "JWT", icon: <SiJsonwebtokens className="w-4 h-4" />, color: "text-pink-500" },
         { name: "Bitbucket", icon: <IoLogoBitbucket className="w-4 h-4" />, color: "text-blue-500" },
         { name: "Git", icon: <SiGit className="w-4 h-4" />, color: "text-orange-600" },
         { name: "AWS", icon: <FaAws className="w-4 h-4" />, color: "text-black-500" },
@@ -217,7 +217,7 @@ const Experience = () => {
         { name: "Digital Ocean", icon: <SiDigitalocean className="w-4 h-4" />, color: "text-cyan-500" },
         { name: "Firebase", icon: <SiFirebase className="w-4 h-4" />, color: "text-orange-500" },
         { name: "Razorpay", icon: <SiRazorpay className="w-4 h-4" />, color: "text-blue-500" },
-        { name: "JWT", icon: <SiJsonwebtokens  className="w-4 h-4" />, color: "text-pink-500" },
+        { name: "JWT", icon: <SiJsonwebtokens className="w-4 h-4" />, color: "text-pink-500" },
         { name: "Bitbucket", icon: <IoLogoBitbucket className="w-4 h-4" />, color: "text-blue-500" },
         { name: "Git", icon: <SiGit className="w-4 h-4" />, color: "text-orange-600" }
       ],
@@ -226,7 +226,7 @@ const Experience = () => {
       pathPoint: 2
     },
     {
-      id: 3,
+      id: 4,
       title: "Junior Web Developer",
       company: "Webnox Technologies",
       period: "2023 (Nov) - 2024 (March)",
@@ -244,14 +244,14 @@ const Experience = () => {
         { name: "Node JS", icon: <SiNodedotjs className="w-4 h-4" />, color: "text-green-500" },
         { name: "Express", icon: <SiExpress className="w-4 h-4" />, color: "text-gray-600" },
         { name: "MySQL", icon: <SiMysql className="w-4 h-4" />, color: "text-blue-700" },
-        { name: "Digital Ocean", icon: <SiDigitalocean className="w-4 h-4" />, color: "text-cyan-500" }       
+        { name: "Digital Ocean", icon: <SiDigitalocean className="w-4 h-4" />, color: "text-cyan-500" }
       ],
       color: "bg-yellow-600",
       side: "right",
       pathPoint: 3
     },
     {
-      id: 4,
+      id: 5,
       title: "Software Developer Intern",
       company: "Sivasakthi Software Services Private Limited",
       period: "2023 (August) - 2023 (Oct)",
@@ -302,18 +302,18 @@ const Experience = () => {
 
     // Check if device is mobile
     let isMobile = window.innerWidth <= 768;
-    
+
     // Handle resize and orientation changes
     const handleResize = () => {
       isMobile = window.innerWidth <= 768;
-      
+
       // Kill all existing ScrollTriggers
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      
+
       // Reinitialize animations based on new screen size
       initializeAnimations();
     };
-    
+
     const initializeAnimations = () => {
       // Set initial path styles
       const pathLength = path.getTotalLength();
@@ -334,7 +334,7 @@ const Experience = () => {
               const progress = self.progress;
               const offset = pathLength - (pathLength * progress);
               gsap.set(path, { strokeDashoffset: offset });
-              
+
               // Update progress indicator
               const progressElement = document.querySelector('.timeline-progress');
               if (progressElement) {
@@ -355,9 +355,9 @@ const Experience = () => {
             scale: 1,
             y: 0
           });
-          
+
           // Simple fade-in animation for mobile
-          gsap.fromTo(item, 
+          gsap.fromTo(item,
             { opacity: 0, y: 20 },
             {
               opacity: 1,
@@ -526,7 +526,7 @@ const Experience = () => {
             const progress = self.progress;
             const offset = pathLength - (pathLength * progress);
             gsap.set(path, { strokeDashoffset: offset });
-            
+
             // Update progress indicator
             const progressElement = document.querySelector('.timeline-progress');
             if (progressElement) {
@@ -547,9 +547,9 @@ const Experience = () => {
           scale: 1,
           y: 0
         });
-        
+
         // Simple fade-in animation for mobile
-        gsap.fromTo(item, 
+        gsap.fromTo(item,
           { opacity: 0, y: 20 },
           {
             opacity: 1,
@@ -721,7 +721,7 @@ const Experience = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 py-20 px-4 overflow-hidden">
+    <div className="relative min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 py-20 px-4 overflow-hidden z-10">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <section className="experience-section">
@@ -735,20 +735,20 @@ const Experience = () => {
             />
           </div>
         </section>
-        
+
         <div ref={paragraphRef} className="text-center mb-16">
           <p className="text-lg text-amber-800 max-w-2xl mx-auto">
             Follow the path of my professional evolution through technology and innovation
           </p>
         </div>
-  
+
         {/* Timeline Container */}
         <div ref={containerRef} className="timeline-container relative py-20 min-h-screen">
           {/* Progress Indicator */}
           <div className="absolute top-4 right-4 z-20 bg-amber-100/80 backdrop-blur-sm rounded-full px-4 py-2 text-sm text-amber-800 font-medium">
             <span className="timeline-progress">0%</span> Complete
           </div>
-          
+
           {/* Snake Path SVG */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none"
@@ -881,7 +881,7 @@ const Experience = () => {
                         {exp.icon}
                         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/20 to-transparent"></div>
                       </div>
-                      
+
                       {/* Connecting Lines */}
                       <div className="absolute top-1/2 transform -translate-y-1/2 w-8 h-1 bg-gradient-to-r from-amber-400 to-orange-500 -left-8"></div>
                       <div className="absolute top-1/2 transform -translate-y-1/2 w-8 h-1 bg-gradient-to-r from-orange-500 to-amber-400 -right-8"></div>
@@ -990,7 +990,7 @@ const Experience = () => {
         </div>
       </div>
 
-              {/* Custom CSS for animations */}
+      {/* Custom CSS for animations */}
       <style jsx>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }

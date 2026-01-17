@@ -31,7 +31,7 @@ const MagneticCursor = () => {
       // Smooth cursor movement with magnetic effect
       cursorX += (mouseX - cursorX) * 0.08;
       cursorY += (mouseY - cursorY) * 0.08;
-      
+
       // Smooth dot movement (faster)
       cursorDotX += (mouseX - cursorDotX) * 0.25;
       cursorDotY += (mouseY - cursorDotY) * 0.25;
@@ -52,15 +52,18 @@ const MagneticCursor = () => {
     // Handle hover effects on interactive elements
     const handleMouseEnter = (e) => {
       const target = e.target;
-      
+
+      // Ensure target is an Element before using closest()
+      if (!(target instanceof Element)) return;
+
       // Check if element is interactive
-      if (target.tagName === 'BUTTON' || 
-          target.tagName === 'A' || 
-          target.closest('button') || 
-          target.closest('a') ||
-          target.classList.contains('cursor-hover') ||
-          target.closest('.cursor-hover')) {
-        
+      if (target.tagName === 'BUTTON' ||
+        target.tagName === 'A' ||
+        target.closest('button') ||
+        target.closest('a') ||
+        target.classList.contains('cursor-hover') ||
+        target.closest('.cursor-hover')) {
+
         // Enhanced hover effect
         gsap.to(cursor, {
           scale: 2,
@@ -68,7 +71,7 @@ const MagneticCursor = () => {
           ease: "back.out(1.7)",
           borderWidth: "3px"
         });
-        
+
         gsap.to(cursorDot, {
           scale: 0.3,
           duration: 0.4,
@@ -97,7 +100,7 @@ const MagneticCursor = () => {
         ease: "back.out(1.7)",
         borderWidth: "2px"
       });
-      
+
       gsap.to(cursorDot, {
         scale: 1,
         duration: 0.4,
@@ -120,7 +123,7 @@ const MagneticCursor = () => {
         duration: 0.1,
         ease: "power2.out"
       });
-      
+
       gsap.to(cursorDot, {
         scale: 1.5,
         duration: 0.1,
@@ -134,7 +137,7 @@ const MagneticCursor = () => {
         duration: 0.2,
         ease: "elastic.out(1, 0.3)"
       });
-      
+
       gsap.to(cursorDot, {
         scale: 1,
         duration: 0.2,

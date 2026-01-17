@@ -33,27 +33,27 @@ const defaultProjects = [
     tech: [SiNextdotjs, SiThreedotjs, SiTailwindcss, SiGit, SiGithub],
     demo: "https://suresh-shanmugasundaram-portfolio.vercel.app/",
     // github: "#",
-  },  
+  },
   {
     image: "/images/projects/project2.png",
     title: "Online House Planners Website",
     category: "Frontend",
     description:
       "A responsive web platform designed for exploring and showcasing house planning concepts. The interface features an interactive project grid with smooth hover tilt effects, staggered entrance animations, and full keyboard accessibility for an inclusive user experience. Built with React and styled using Tailwind CSS, the project emphasizes both modern UI design and accessibility best practices.",
-    tech: [SiReact,SiThreedotjs, SiTailwindcss, SiGit, SiGithub],
+    tech: [SiReact, SiThreedotjs, SiTailwindcss, SiGit, SiGithub],
     demo: "https://onlinehouseplan.vercel.app/",
     // github: "#",
-  },  
+  },
   {
     image: "/images/projects/project3.png",
     title: "Practo Patient Dashboard",
     category: "Fullstack",
     description:
-    "An interactive personal portfolio built with Next.js, featuring smooth GSAP animations, ScrollTrigger effects, and immersive Three.js 3D visuals. Styled with Tailwind CSS, the site delivers a modern, dynamic showcase of projects and skills with a focus on performance and user engagement. It serves as a creative space to highlight technical expertise while providing an engaging browsing experience.",  
+      "An interactive personal portfolio built with Next.js, featuring smooth GSAP animations, ScrollTrigger effects, and immersive Three.js 3D visuals. Styled with Tailwind CSS, the site delivers a modern, dynamic showcase of projects and skills with a focus on performance and user engagement. It serves as a creative space to highlight technical expertise while providing an engaging browsing experience.",
     tech: [SiReact, SiNodedotjs, SiMysql, SiPrisma, SiTailwindcss, SiFramer, SiExpress, SiFirebase],
     // demo: "#",
     // github: "#",
-  },  
+  },
   {
     image: "/images/projects/project4.png",
     title: "Practo Doctor Dashboard",
@@ -64,7 +64,7 @@ const defaultProjects = [
     // demo: "#",
     // github: "#",
   }
-  
+
 ];
 
 const MyProjects = ({ projects: incomingProjects }) => {
@@ -212,7 +212,7 @@ const MyProjects = ({ projects: incomingProjects }) => {
     <section
       ref={sectionRef}
       id="projects"
-      className="bg-milk text-dark-brown w-full py-20 md:py-28"
+      className="relative bg-milk text-dark-brown w-full py-20 md:py-28 z-10"
       aria-label="My Projects"
     >
       <div className="max-w-7xl mx-auto px-5 md:px-8">
@@ -239,11 +239,10 @@ const MyProjects = ({ projects: incomingProjects }) => {
               type="button"
               onClick={() => setActiveCategory(c)}
               aria-pressed={activeCategory === c}
-              className={`px-4 py-2 rounded-full border transition-colors text-sm md:text-base focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-dark-brown/20 ${
-                activeCategory === c
+              className={`px-4 py-2 rounded-full border transition-colors text-sm md:text-base focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-dark-brown/20 ${activeCategory === c
                   ? "bg-mid-brown text-[#fce1cd] border-mid-brown"
                   : "bg-[#ffffffcc] text-dark-brown border-[#e8ddca] hover:bg-white"
-              }`}
+                }`}
             >
               {c}
             </button>
@@ -301,28 +300,28 @@ const MyProjects = ({ projects: incomingProjects }) => {
                 </ul>
 
                 <div className="flex items-center gap-3 md:gap-4 pt-2">
-               {project.demo ? (
-                 <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="cursor-pointer hero-button !bg-mid-brown !text-[#fce1cd] !py-2.5 !px-6 !text-base !rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-dark-brown/20"
-                    aria-label={`${project.title} live demo`}
-                  >
-                    Live Demo
-                  </a>
-): null}
+                  {project.demo ? (
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="cursor-pointer hero-button !bg-mid-brown !text-[#fce1cd] !py-2.5 !px-6 !text-base !rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-dark-brown/20"
+                      aria-label={`${project.title} live demo`}
+                    >
+                      Live Demo
+                    </a>
+                  ) : null}
                   {project.github ? (
                     <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="cursor-pointer hero-button !bg-light-brown !text-dark-brown !py-2.5 !px-6 !text-base !rounded-full flex items-center gap-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-dark-brown/20"
-                    aria-label={`${project.title} GitHub repository`}
-                  >
-                    <SiGithub className="size-5" /> GitHub
-                  </a>
-                  ): null}
+                      href={project.github}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="cursor-pointer hero-button !bg-light-brown !text-dark-brown !py-2.5 !px-6 !text-base !rounded-full flex items-center gap-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-dark-brown/20"
+                      aria-label={`${project.title} GitHub repository`}
+                    >
+                      <SiGithub className="size-5" /> GitHub
+                    </a>
+                  ) : null}
                 </div>
               </div>
             </article>
